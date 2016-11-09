@@ -4,10 +4,7 @@ import {browserHistory, Link} from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/forward' //send
 
-var links = {
-	videoId: null,
-	proximo: null,
-}
+var links;
 
 export default class Video extends Component {
 
@@ -16,8 +13,8 @@ export default class Video extends Component {
 		this.fullScreen()
 
 		links = {
-			videoId: this.props.videoId,
-			proximo: this.props.linkDoProximo,
+			videoId: this.props.route.videoId,
+			proximo: this.props.route.linkDoProximo,
 		}
 	}
 
@@ -50,7 +47,7 @@ export default class Video extends Component {
 		}
 
 		return (
-			<div className="telaCheia">
+			<div className="telaCheia" style={{position: 'fixed'}}>
 				<YouTube videoId={links.videoId}
 					opts={opts}
 					onReady={this.onReady}
@@ -66,7 +63,7 @@ export default class Video extends Component {
 	}
 
 	onReady(event) {
-		event.target.playVideo()	// access to player in all event handlers via event.target
+		event.target.playVideo()
 		// event.target.setVolume(50)
 	}
 
