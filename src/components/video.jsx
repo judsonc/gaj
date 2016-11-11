@@ -1,20 +1,17 @@
 import React, {Component} from 'react'
 import YouTube from 'react-youtube'
-import {browserHistory, Link} from 'react-router'
+import {Link} from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/forward' //send
 
-var links;
-
 export default class Video extends Component {
-
 	constructor(props) {
 		super(props)
 		this.fullScreen()
 
-		links = {
-			videoId: this.props.route.videoId,
-			proximo: this.props.route.linkDoProximo,
+		this.state = {
+			videoId: props.route.videoId,
+			proximo: props.route.linkDoProximo,
 		}
 	}
 
@@ -22,6 +19,15 @@ export default class Video extends Component {
 		document.getElementsByTagName("html")[0].className = "telaCheia"
 		document.getElementsByTagName("body")[0].className = "telaCheia"
 		document.getElementById("root").className = "telaCheia"
+	}
+
+	onReady(event) {
+		event.target.playVideo()
+		// event.target.setVolume(50)
+	}
+
+	onEnd() {
+		this.context.router.push(this.state.proximo)
 	}
 
 	render() {
@@ -48,12 +54,12 @@ export default class Video extends Component {
 
 		return (
 			<div className="telaCheia" style={{position: 'fixed'}}>
-				<YouTube videoId={links.videoId}
+				<YouTube videoId={this.state.videoId}
 					opts={opts}
 					onReady={this.onReady}
-					onEnd={this.onEnd}
+					onEnd={this.onEnd.bind(this)}
 				/>
-				<Link to={links.proximo}>
+				<Link to={this.state.proximo}>
 					<FloatingActionButton style={styleBotaoFlutuante}>
 						<ContentAdd />
 					</FloatingActionButton>
@@ -61,13 +67,8 @@ export default class Video extends Component {
 			</div>
 		)
 	}
+}
 
-	onReady(event) {
-		event.target.playVideo()
-		// event.target.setVolume(50)
-	}
-
-	onEnd(event) {
-		browserHistory.push(links.proximo)
-	}
+Video.contextTypes = {
+	router: React.PropTypes.object.isRequired
 }

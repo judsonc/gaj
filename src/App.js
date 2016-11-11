@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import {Router, Route, hashHistory, IndexRoute} from 'react-router'
+import {Router, Route, hashHistory, IndexRoute, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
@@ -74,7 +74,7 @@ class App extends Component {
                     </Route>
                     <Route path="/video1" component={Video} videoId="v-E7yCfVlBo" linkDoProximo="/" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
-                    <Route path="*" component={Teste} />
+                    <Redirect from='*' to='/' />
                 </Router>
             </MuiThemeProvider>
         );
