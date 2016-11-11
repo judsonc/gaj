@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import {Link} from 'react-router';
-import $ from 'jquery'; 
+import $ from 'jquery';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import SocialShare from 'material-ui/svg-icons/social/share';
 import NotificationConfirmationNumber from 'material-ui/svg-icons/notification/confirmation-number';
@@ -27,7 +27,10 @@ var Ambiente = React.createClass({
   },
   componentDidMount: function() {
     this.loadCardsfromServer();
-    setInterval(this.loadCardsfromServer, this.props.pollInterval);
+    this.intervalo = setInterval(this.loadCardsfromServer, this.props.pollInterval);
+  },
+  componentWillUnmount: function() {
+    clearInterval(this.intervalo)
   },
   render: function() {
     return (
@@ -70,7 +73,7 @@ class CardList extends Component {
 					</CardText>
 					<CardActions>
 						<FlatButton primary={true} icon={<NotificationConfirmationNumber />} />
-						<FlatButton label={card.likes} primary={true} icon={<ActionThumbUp />} /> 
+						<FlatButton label={card.likes} primary={true} icon={<ActionThumbUp />} />
 						<FlatButton label={card.shares} secondary={true} icon={<SocialShare />} />
 					</CardActions>
 				</Card>
