@@ -14,16 +14,16 @@ import Quiz from './components/quiz'
 import './assets/bootstrap-grid-responsive.css'
 import './assets/index.css'
 import {
-    cyan500, cyan700,
+    red500, red600,
     grey100, grey300, grey400, grey500,
-    white, darkBlack, fullBlack, blueGrey500,
+    white, darkBlack, fullBlack, redA700,
 } from 'material-ui/styles/colors'
 
 const muiTheme = getMuiTheme({
     fontFamily: 'Roboto, sans-serif',
     palette: {
-        primary1Color: blueGrey500,
-        primary2Color: cyan700,
+        primary1Color: redA700,
+        primary2Color: red600,
         primary3Color: grey400,
         accent1Color: grey500,
         accent2Color: grey100,
@@ -32,7 +32,7 @@ const muiTheme = getMuiTheme({
         alternateTextColor: white,
         canvasColor: white,
         borderColor: grey300,
-        pickerHeaderColor: cyan500,
+        pickerHeaderColor: red500,
         shadowColor: fullBlack,
     },
 })
@@ -73,8 +73,7 @@ class App extends Component {
                         />
                     </Route>
                     <Route path="/video1" component={Video} videoId="v-E7yCfVlBo" linkDoProximo="/" />
-                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
-                    <Route path="*" component={Teste} />
+                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/" />
                 </Router>
             </MuiThemeProvider>
         );
