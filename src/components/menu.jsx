@@ -4,7 +4,6 @@ import Drawer from 'material-ui/Drawer';
 import {Link} from 'react-router';
 import {List, ListItem} from 'material-ui/List';
 //icones
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 
 export default class Menu extends React.Component {
@@ -32,9 +31,6 @@ export default class Menu extends React.Component {
                     onRequestChange={(open) => this.setState({open})}
                 >
                     <List>
-                        <Link to={'/'}>
-                            <ListItem primaryText="Login" leftIcon={<ContentInbox />} onTouchTap={this.handleClose} />
-                        </Link>
                         <Link to={'/video1'}>
                             <ListItem primaryText="Video1" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
                         </Link>

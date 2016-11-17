@@ -5,27 +5,27 @@ import Paper from 'material-ui/Paper';
 var TiSocialFacebook = require('react-icons/lib/ti/social-facebook');
 var TiSocialGooglePlus = require('react-icons/lib/ti/social-google-plus');
 import * as firebase from 'firebase';
-const config = {
-    apiKey: "AIzaSyC581GYCJNbtFvRu0kRAPCNGKRL3gF7VAc",
-    authDomain: "projetoallan-b74d8.firebaseapp.com",
-    databaseURL: "https://projetoallan-b74d8.firebaseio.com",
-    storageBucket: "projetoallan-b74d8.appspot.com",
-    messagingSenderId: "119257082817"
-}
-const fb = firebase.initializeApp(config).database().ref()
-import {browserHistory} from 'react-router'
+import fb from './firebase.js'
+import {hashHistory} from 'react-router'
 var providerfacebook = new firebase.auth.FacebookAuthProvider();
 var providergoogle = new firebase.auth.GoogleAuthProvider();
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         console.log("Logado");
-        console.log("  Sign-in provider: " + user.providerId);
-        console.log("  Provider-specific UID: " + user.uid);
-        console.log("  Name: " + user.displayName);
-        console.log("  Email: " + user.email);
-        console.log("  Photo URL: " + user.photoURL);
-        browserHistory.push("ambiente")
-        localStorage.setItem('user', user)
+        localStorage.setItem('providerId', user.providerId)
+        localStorage.setItem('uid', user.uid)
+        localStorage.setItem('displayName', user.displayName)
+        localStorage.setItem('email', user.email)
+        localStorage.setItem('photoURL', user.photoURL)
+
+        console.log(localStorage.getItem('providerId'))
+        console.log(localStorage.getItem('uid'))
+        console.log(localStorage.getItem('displayName'))
+        console.log(localStorage.getItem('email'))
+        console.log(localStorage.getItem('photoURL'))
+        
+        hashHistory.push("ambiente")
+
     } else {
         console.log("Não Logado");
     }
@@ -64,7 +64,7 @@ export default class Login extends Component {
   	}
     return (
     <div className="container">
-    	<div className="row">
+    	<div className="row margintop">
 			<div className="col-xs-12">
 			<Paper className="formlogin">
 		      <TextField
