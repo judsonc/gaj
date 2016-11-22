@@ -48,6 +48,11 @@ class Viewambiente extends Component {
 }
 
 class App extends Component {
+    componentWillMount() {
+        if(localStorage.getItem('email')){
+            hashHistory.push("ambiente")
+        }
+    }
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>

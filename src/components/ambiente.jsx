@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import {Link} from 'react-router';
 import $ from 'jquery';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import SocialShare from 'material-ui/svg-icons/social/share';
@@ -32,11 +31,13 @@ var Ambiente = React.createClass({
   componentWillUnmount: function() {
     clearInterval(this.intervalo)
   },
+
   render: function() {
     return (
     	<div className="container">
 	    	<div className="row">
         		<CardList data={this.state.data} />
+		   		<div className="col-xs-12 smallImage"/>
 			</div>
 		</div>
     );
@@ -54,18 +55,16 @@ class CardList extends Component {
 	   return (
 	   	<div key={card.id} className="col-xs-12 col-sm-6 col-md-4 singlecard">
 	      <Card className="">
-					<Link to={'/user/'+card.perfil}>
-						<CardHeader
-							title={'@'+card.perfil}
-							subtitle={card.subperfil}
-							avatar={card.avatar}
-						/>
-					</Link>
-
+					<CardHeader
+						title={'@'+card.perfil}
+						subtitle={card.subperfil}
+						avatar={card.avatar}
+					/>
 					<CardMedia
 						overlay={<CardTitle title={card.overlaytitle} subtitle={card.overlaysubtitle} />}
 					>
-						<img src={card.imagem} alt={card.imgalt} />
+						<div className="imagemCard" 
+						style={{backgroundImage:"url("+card.imagem+")"}}/>
 					</CardMedia>
 					<CardTitle title={card.cardtitle} subtitle={card.subtitle} />
 					<CardText>
