@@ -72,7 +72,7 @@ class App extends Component {
                             r4p3="4º opcao de Resposta pergunta3"
                         />
                     </Route>
-                    <Route path="/video1" component={Video} videoId="v-E7yCfVlBo" linkDoProximo="/" />
+                    <Route path="/video1" component={Video} videoId="v-E7yCfVlBo" linkDoProximo="/quiz" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
                     <Redirect from='*' to='/' />
                 </Router>

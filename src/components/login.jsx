@@ -5,25 +5,19 @@ import Paper from 'material-ui/Paper';
 var TiSocialFacebook = require('react-icons/lib/ti/social-facebook');
 var TiSocialGooglePlus = require('react-icons/lib/ti/social-google-plus');
 import * as firebase from 'firebase';
-import fb from './firebase.js'
+import  './firebase.js'
 import {hashHistory} from 'react-router'
 var providerfacebook = new firebase.auth.FacebookAuthProvider();
 var providergoogle = new firebase.auth.GoogleAuthProvider();
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        hashHistory.push("ambiente")
         console.log("Logado");
         localStorage.setItem('providerId', user.providerId)
         localStorage.setItem('uid', user.uid)
         localStorage.setItem('displayName', user.displayName)
         localStorage.setItem('email', user.email)
         localStorage.setItem('photoURL', user.photoURL)
-
-        console.log(localStorage.getItem('providerId'))
-        console.log(localStorage.getItem('uid'))
-        console.log(localStorage.getItem('displayName'))
-        console.log(localStorage.getItem('email'))
-        console.log(localStorage.getItem('photoURL'))
-        
         hashHistory.push("ambiente")
 
     } else {
@@ -43,6 +37,11 @@ export default class Login extends Component {
 		        console.log(errorMessage);
 		    });
 		}
+    }
+    componentWillMount() {
+    	if(localStorage.getItem('email')){
+    		hashHistory.push("ambiente")
+    	}
     }
 	handleChange = (event) => {
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
