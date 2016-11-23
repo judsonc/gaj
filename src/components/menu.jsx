@@ -31,17 +31,11 @@ export default class Menu extends React.Component {
                     onRequestChange={(open) => this.setState({open})}
                 >
                     <List>
-                        <Link to={'/video1'}>
-                            <ListItem primaryText="Video1" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
+                        <Link to={'/'}>
+                            <ListItem primaryText="Vídeo de introdução" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
                         </Link>
                         <Link to={'/video2'}>
                             <ListItem primaryText="Video2" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
-                        </Link>
-                        <Link to={'/quiz'}>
-                            <ListItem primaryText="Quiz" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
-                        </Link>
-                        <Link to={'/ambiente'}>
-                            <ListItem primaryText="Ambiente" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
                         </Link>
                     </List>
                 </Drawer>

@@ -18,7 +18,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         localStorage.setItem('displayName', user.displayName)
         localStorage.setItem('email', user.email)
         localStorage.setItem('photoURL', user.photoURL)
-        hashHistory.push("ambiente")
 
     } else {
         console.log("Não Logado");
@@ -32,9 +31,8 @@ export default class Login extends Component {
 	handleSubmitEmail = () =>{
 		if(this.state.erroemail){
 		    firebase.auth().createUserWithEmailAndPassword(this.state.email, "8b3defbdab5c56a4").catch(function (error) {
-		        var errorCode = error.code;
-		        var errorMessage = error.message;
-		        console.log(errorMessage);
+		        console.log(error.code);
+		        console.log(error.message);
 		    });
 		}
     }

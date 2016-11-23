@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import {Router, Route, hashHistory, IndexRoute, Redirect} from 'react-router'
+import {Router, Route, hashHistory, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import Login from './components/login'
 import Ambiente from './components/ambiente'
-import Teste from './components/teste'
 import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
@@ -57,29 +56,14 @@ class App extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
+                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />
+                    <Route path="/quiz" component={Quiz} />
+                    <Route path="/login" component={Login} />
                     <Route path="/" component={Menu}>
-                        <IndexRoute component={Login} />
                         <Route path="ambiente" component={Viewambiente} />
-                        <Route path="teste" component={Teste} />
-                        <Route path="quiz" component={Quiz}
-                            pergunta1="Primeiro Pergunta"
-                            pergunta2="Segunda Pergunta"
-                            pergunta3="Terceira Pergunta"
-                            r1p1="1º opcao de Resposta pergunta1"
-                            r2p1="2º opcao de Resposta pergunta1"
-                            r3p1="3º opcao de Resposta pergunta1"
-                            r4p1="4º opcao de Resposta pergunta1"
-                            r1p2="1º opcao de Resposta pergunta2"
-                            r2p2="2º opcao de Resposta pergunta2"
-                            r1p3="1º opcao de Resposta pergunta3"
-                            r2p3="2º opcao de Resposta pergunta3"
-                            r3p3="3º opcao de Resposta pergunta3"
-                            r4p3="4º opcao de Resposta pergunta3"
-                        />
                     </Route>
-                    <Route path="/video1" component={Video} videoId="v-E7yCfVlBo" linkDoProximo="/quiz" />
-                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
-                    <Redirect from='*' to='/' />
+                    <Redirect from='*' to='/ambiente' />
                 </Router>
             </MuiThemeProvider>
         );

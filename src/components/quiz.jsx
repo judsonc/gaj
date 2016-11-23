@@ -121,7 +121,7 @@ export default class Quiz extends Component {
         
         <div style={contentStyle}>
             <div className="">
-              <form action="ambiente" method="get">
+              <form action="/#/video2" method="post">
                       <div className="alinhamento">
                        {this.getStepContent(stepIndex)}
                       </div>
