@@ -1,24 +1,16 @@
 import React, {Component} from 'react'
-import YouTube from 'react-youtube'
 import {Link} from 'react-router'
+import YouTube from 'react-youtube'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/forward' //send
 
 export default class Video extends Component {
 	constructor(props) {
 		super(props)
-		this.fullScreen()
-
 		this.state = {
 			videoId: props.route.videoId,
 			proximo: props.route.linkDoProximo,
 		}
-	}
-
-	fullScreen() {
-		document.getElementsByTagName("html")[0].className = "telaCheia"
-		document.getElementsByTagName("body")[0].className = "telaCheia"
-		document.getElementById("root").className = "telaCheia"
 	}
 
 	onReady(event) {
@@ -38,6 +30,12 @@ export default class Video extends Component {
 			position: 'fixed',
 		}
 
+		const styleVideo = {
+			position: 'fixed',
+			width: '100%',
+			height: '100%',
+		}
+
 		const opts = {
 			width: '100%',
 			height: '100%',
@@ -53,7 +51,7 @@ export default class Video extends Component {
 		}
 
 		return (
-			<div className="telaCheia" style={{position: 'fixed'}}>
+			<span style={styleVideo}>
 				<YouTube videoId={this.state.videoId}
 					opts={opts}
 					onReady={this.onReady}
@@ -64,7 +62,7 @@ export default class Video extends Component {
 						<ContentAdd />
 					</FloatingActionButton>
 				</Link>
-			</div>
+			</span>
 		)
 	}
 }

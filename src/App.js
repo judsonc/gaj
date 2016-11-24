@@ -10,7 +10,7 @@ import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
 
-import './assets/bootstrap-grid-responsive.css'
+import './assets/bootstrapGridResponsive.css'
 import './assets/index.css'
 import {
     red500, red600,
@@ -37,6 +37,7 @@ const muiTheme = getMuiTheme({
 })
 
 injectTapEventPlugin()
+// alert(location.pathname)
 
 class Viewambiente extends Component {
     render() {
@@ -66,7 +67,7 @@ class App extends Component {
                     <Redirect from='*' to='/ambiente' />
                 </Router>
             </MuiThemeProvider>
-        );
+        )
     }
 }
 

@@ -19,6 +19,7 @@ input{
         -ms-user-select: auto !important;
             user-select: auto !important;
 }
+html, body {height: 100%;}
 body::-webkit-scrollbar {width:10px; background:#eee;}
 body::-webkit-scrollbar-track {background: #eee;}
 body::-webkit-scrollbar-thumb {border: 1px solid #eee; border-radius:10px; background:#b0b0b0;}
@@ -50,18 +51,14 @@ a:hover{
 .buttonlogin span, svg{
 	color :white !important;
 }
-.telaCheia{
-    height: 100%;
-    width: 100%;
-}
 .formlogin{
     padding: 5px;
 }
-.imagemCard{
+/*.imagemCard{
     padding-top: 90%;
     background-size: cover;
     background-position: center;
-}
+}*/
 #root{
     padding-bottom: 10px;
 }
@@ -70,5 +67,4 @@ a:hover{
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-    background-image: url("ThankYou.svg");
 }

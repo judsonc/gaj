@@ -1,4 +1,5 @@
 import React from 'react';
+
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import {Link} from 'react-router';
@@ -7,8 +8,8 @@ import {List, ListItem} from 'material-ui/List';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 
 export default class Menu extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {open: false};
     }
 
@@ -32,15 +33,15 @@ export default class Menu extends React.Component {
                 >
                     <List>
                         <Link to={'/'}>
-                            <ListItem primaryText="Vídeo de introdução" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
+                            <ListItem primaryText="Introdução" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
                         </Link>
                         <Link to={'/video2'}>
-                            <ListItem primaryText="Video2" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
+                            <ListItem primaryText="Benefícios" leftIcon={<ActionGrade />} onTouchTap={this.handleClose} />
                         </Link>
                     </List>
                 </Drawer>
                 {this.props.children}
             </div>
-        );
+        )
     }
 }
