@@ -6,5 +6,10 @@ const config = {
     storageBucket: "garcomajato-d9f5d.appspot.com",
     messagingSenderId: "977844351237"
 }
-const fb = firebase.initializeApp(config).database()
-export default fb
+firebase.initializeApp(config)
+export var database = firebase.database()
+export var refAcesso = database.ref('acessos')
+export var refQuestionarios = database.ref('questionarios')
+export var refPerguntas = database.ref('perguntas')
+export var refRestaurantes = database.ref('restaurantes')
+

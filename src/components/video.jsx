@@ -12,7 +12,15 @@ export default class Video extends Component {
 			proximo: props.route.linkDoProximo,
 		}
 	}
-
+	componentDidMount() {
+		if(location.pathname=='/'){
+			localStorage.setItem('proximaVisita','/quiz')
+		}
+		else{
+			localStorage.setItem('proximaVisita','/login')
+		}
+		console.log(localStorage.getItem('proximaVisita'))
+	}
 	onReady(event) {
 		event.target.playVideo()
 		// event.target.setVolume(50)

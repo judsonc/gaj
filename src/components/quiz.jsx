@@ -6,9 +6,7 @@ import '../assets/styleQuiz.css';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import fb from './firebase.js'
 
-var questionariosref = fb.ref('questionarios')
 var perguntasref
 //injectTapEventPlugin();
 var Perguntas ={

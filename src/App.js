@@ -3,13 +3,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Router, Route, hashHistory, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-
+import {refAcesso} from './components/firebase.js'
 import Login from './components/login'
 import Ambiente from './components/ambiente'
 import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
-
+import {Acesso} from './components/acesso.js'
 import './assets/bootstrapGridResponsive.css'
 import './assets/index.css'
 import {
@@ -35,7 +35,22 @@ const muiTheme = getMuiTheme({
         shadowColor: fullBlack,
     },
 })
-
+if(!localStorage.getItem('acesso')){
+    var acesso = new Acesso([false,false,false,false])
+    var acessoIdRef = refAcesso.push(acesso)
+    var acessoId = {}
+    acessoId[acessoIdRef.key] = acesso
+    localStorage.setItem('acesso',JSON.stringify(acessoId))
+}else{
+    var velhoAcesso=JSON.parse(localStorage.getItem('acesso'))
+    if(Date.now()-velhoAcesso.ultimaAlteracao>=7200000){
+        var acesso = new Acesso([false,false,false,false])
+        var acessoIdRef = refAcesso.push(acesso)
+        var acessoId = {}
+        acessoId[acessoIdRef.key] = acesso
+        localStorage.setItem('acesso',JSON.stringify(acessoId))
+    }
+}
 injectTapEventPlugin()
 // alert(location.pathname)
 
@@ -52,6 +67,13 @@ class App extends Component {
         if(localStorage.getItem('email')){
             hashHistory.push("ambiente")
         }
+    }
+    componentDidMount() {
+        if(localStorage.getItem('proximaVisita')){
+            console.log(localStorage.getItem('proximaVisita'));
+            hashHistory.push(localStorage.getItem('proximaVisita'))
+        }
+
     }
     render() {
         return (
