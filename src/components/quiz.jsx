@@ -1,256 +1,365 @@
 import React, {Component} from 'react'
-import {hashHistory} from 'react-router'
 import {Step,Stepper,StepLabel,} from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import '../assets/styleQuiz.css';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Toggle from 'material-ui/Toggle';
+import perguntas from './perguntas';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-var perguntasref
 //injectTapEventPlugin();
 var Perguntas ={
     P1: "1° Pergunta",
     P2: "2° Pergunta",
     P3: "3° Pergunta",
 };
-var respostaP1={
-    r1p1: "resp 1",
-    r2p1: "resp 2",
-    r3p1: "resp 1",
-    r4p1: "resp 2",
+var jsonbanco = {
+  "data": {
+    "criacao": 1478919847072,
+    "criacaoReverso": -1478919847072,
+    "ultimaAlteracao": 1478919847072,
+    "ultimaAlteracaoReverso": -1478919847072
+  },
+  "perguntas": {
+    "-KWLFdQyWg7rPthdEFTc": {
+      "conteudo": "Conteúdo da pergunta?",
+      "ordem": 1,
+      "respostas": [
+        "opcao 0",
+        "opcao 1",
+        "opcao 2"
+      ],
+      "temOutraResposta": false,
+      "tipo": "radio"
+    },
+    "-KWLFm-IqDbthXbKvdKz": {
+      "conteudo": "Conteúdo da pergunta?",
+      "ordem": 2,
+      "respostas": [
+        "opcao 0",
+        "opcao 1",
+        "opcao 2",
+        "opcao 3"
+      ],
+      "temOutraResposta": true,
+      "tipo": "checkbox"
+    },
+    "-KWLFm-IqDbthXbK000": {
+      "conteudo": "Conteúdo da pergunta?",
+      "ordem": 3,
+      "respostas": [
+        "opcao 0",
+        "opcao 1",
+        "opcao 2",
+        "opcao 3"
+      ],
+      "temOutraResposta": false,
+      "tipo": "checkbox"
+    },
+    "-KWLFm-IqDbthXbKvd33": {
+      "conteudo": "Conteúdo da pergunta?",
+      "ordem": 2,
+      "respostas": [
+        "opcao 0",
+        "opcao 1",
+        "opcao 2",
+        "opcao 3"
+      ],
+      "temOutraResposta": false,
+      "tipo": "checkbox"
+    }
+  },
+  "titulo": "Titulo do Questionário"
+};
+var qtdPerguntas = Object.keys( jsonbanco['perguntas'] );
+console.log(qtdPerguntas.length);
+var perguntasArray = []
+for (var perguntaKey in jsonbanco['perguntas']) {
+  console.log(perguntaKey)
+  var conteudoDaPergunta = jsonbanco['perguntas'][perguntaKey]
+
+  var perguntaArray = [
+    conteudoDaPergunta.temOutraResposta,
+    conteudoDaPergunta.respostas,
+    conteudoDaPergunta.tipo,
+    conteudoDaPergunta.conteudo
+  ]
+
+  perguntasArray[conteudoDaPergunta.ordem] = perguntaArray;
+
 }
-var respostaP2={
-    r1p2: "resp 5",
-    r2p2: "resp 2",
-}
-var respostaP3={
-    r1p3: "resp 1",
-    r2p3: "resp 2",
-    r3p3: "resp 1",
-    r4p3: "resp 2",
-}
+
+
+var perguntasQuiz = perguntasArray;
+/*
+var respostaPerguntas1;
+var respostaPerguntas2;
+var respostaPerguntas3;
+*/
+
+//var perguntasQuiz=[pergunta1,pergunta2,pergunta3];
 
 const styles = {
-    block: {
-        maxWidth: 250,
-    },
-    checkbox: {
-        marginBottom: 16,
-    },
-    radioButton: {
-        marginBottom: 16,
-    },
+   block: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    
+  },
+  radioButton: {
+    
+  },
+  toggle: {
+   
+  },
 
 };
+function tipoPergunta(Pergunta){
+        
+        if(Pergunta[2]==="checkbox"){
+          var listPerguntas = Pergunta[1].map(function(perguntas) {
+              return(
+                <Checkbox 
+                    label={perguntas}
+                    style={styles.checkbox}
+                />
+              )
+          })
+          return(
+            <div> 
+              {listPerguntas}
+              {Pergunta[0]? 
+                <TextField
+                    fullWidth={true}
+                    hintText="Outra resposta"
+                /> :''
+              } 
+            </div>
+          );
+        }
+        else if(Pergunta[2] ==="radio"){
+          var listPerguntas = Pergunta[1].map(function(perguntas) {  
+            return(   
+                <RadioButton 
+                  value={perguntas}
+                  label={perguntas}
+                  style={styles.radioButton}                    
+              />
+            )              
+          })
+          return(
+              <div>
+                    <RadioButtonGroup>
+                      {listPerguntas}
+                    </RadioButtonGroup>
+                  
+                  {Pergunta[0]? 
+                    <TextField
+                      fullWidth={true}
+                      hintText="Outra resposta"
+                  /> :''
+                  }
+              </div>
+          )
+        }else if(Pergunta[2]==="toggle"){
+            return(
+              <SimNao data={Perguntas[1]}/>
+            )
+        }
+    }
 
 /**
-* Horizontal steppers are ideal when the contents of one step depend on an earlier step.
-* Avoid using long step names in horizontal steppers.
-*
-* Linear steppers require users to complete one step in order to move on to the next.
-*/
+ * Horizontal steppers are ideal when the contents of one step depend on an earlier step.
+ * Avoid using long step names in horizontal steppers.
+ *
+ * Linear steppers require users to complete one step in order to move on to the next.
+ */
 export default class Quiz extends Component {
-    constructor(props){
+  constructor(props){
         super(props)
-
-        Perguntas.P1=this.props.route.pergunta1
-        Perguntas.P2=this.props.route.pergunta2
-        Perguntas.P3=this.props.route.pergunta3
-
-        respostaP1.r1p1 = this.props.route.r1p1
-        respostaP1.r2p1 = this.props.route.r2p1
-        respostaP1.r3p1 = this.props.route.r3p1
-        respostaP1.r4p1 = this.props.route.r4p1
-
-        respostaP2.r1p2 = this.props.route.r1p2
-        respostaP2.r2p2 = this.props.route.r2p2
-
-        respostaP3.r1p3 = this.props.route.r1p3
-        respostaP3.r2p3 = this.props.route.r2p3
-        respostaP3.r3p3 = this.props.route.r3p3
-        respostaP3.r4p3 = this.props.route.r4p3
-
+        //perguntasQuiz = this.props.route.perguntasQuiz
+        this.fullScreen()
+        
     }
+    fullScreen() {
+		document.getElementsByTagName("html")[0].className = "telaCheia"
+		document.getElementsByTagName("body")[0].className = "telaCheia"
+		document.getElementById("root").className = "telaCheia"    
+	}
+  state = {
+    finished: false,
+    stepIndex: 0,
+  };
 
-    componentWillMount() {
-        hashHistory.push("login")
-        if(localStorage.getItem('email')){
-            hashHistory.push("ambiente")
-        }
+  handleNext = () => {
+    const {stepIndex} = this.state;
+    this.setState({
+      stepIndex: stepIndex + 1,
+      finished: stepIndex >= 2,
+    });
+  };
+
+  handlePrev = () => {
+    const {stepIndex} = this.state;
+    if (stepIndex > 0) {
+      this.setState({
+      stepIndex: stepIndex - 1,
+      finished: stepIndex >= 2,
+    });
+  }
+    
+  };
+  getStepContent(stepIndex) {
+    if(stepIndex<3){
+      return (
+        <h4>{perguntasQuiz[stepIndex][3]}</h4>
+      );
     }
+    return (
+      <div>
+          <h4>Obrigado Por responder o quiz!!</h4>
+      </div>
+    );
+    
+  };
+  getStepInt(ordem){
+    if(ordem===this.setState.stepIndex){
+        return true;
+    }
+  }
+   
 
-    state = {
-        finished: false,
-        stepIndex: 0,
-    };
-
-    handleNext = () => {
-        const {stepIndex} = this.state;
-        this.setState({
-            stepIndex: stepIndex + 1,
-            finished: stepIndex >= 2,
-        });
-    };
-
-    handlePrev = () => {
-        const {stepIndex} = this.state;
-        if (stepIndex > 0) {
-            this.setState({
-                stepIndex: stepIndex - 1,
-                finished: stepIndex >= 2,
-            });
-        }
-
-    };
-    getStepContent(stepIndex) {
-        switch (stepIndex) {
-            case 0:
-            return <h3>{Perguntas.P1}</h3>;
-            case 1:
-            return <h3>{Perguntas.P2}</h3>;
-            case 2:
-            return <h3>{Perguntas.P3}</h3>;
-            default:
-            return (
-                <div>
-                    <h3>Obrigado Por responder o quiz!!</h3>
+  render() {
+    const {finished, stepIndex} = this.state;
+    const contentStyle = {padding: "5px"};
+    return (
+      <div className="telaQuiz telaCheia">
+        
+        <div className="telaCheia" style={contentStyle}>
+            
+            <div className="">
+              <form action="ambiente" className="telaCheia" method="get">
+                <div className="alinhamento">
+                  <h2>
+                  {jsonbanco.titulo}
+                  </h2>
+                  
+                  {this.getStepContent(2)}
                 </div>
-            );
-        }
-    }
-
-    render() {
-        const {finished, stepIndex} = this.state;
-        const contentStyle = {margin: '0 16px'};
-        return (
-            <div className="telaQuiz">
-
-                <div style={contentStyle}>
-                    <div className="">
-                        <form action="/#/video2" method="post">
-                        <div className="alinhamento">
-                            {this.getStepContent(stepIndex)}
-                        </div>
-                        <div>
-                            <div className={stepIndex === 0 ? 'caixa' : 'disp' } >
-
-                                <Checkbox
-                                    label={respostaP1.r1p1}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP1.r2p1}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP1.r3p1}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP1.r4p1}
-                                    style={styles.checkbox}
-                                />
-                                <TextField
-                                    fullWidth={true}
-                                    hintText="Outra resposta"
-                                />
-                            </div>
-
-                            <div className={stepIndex === 1 ? 'caixa' : 'disp'}>
-                                <RadioButtonGroup name="shipSpeed" defaultSelected={respostaP2.r1p2}>
-                                    <RadioButton
-
-                                        value={respostaP2.r1p2}
-                                        label={respostaP2.r1p2}
-                                        style={styles.radioButton}
-                                    />
-                                    <RadioButton
-                                        value={respostaP2.r2p2}
-                                        label={respostaP2.r2p2}
-                                        style={styles.radioButton}
-
-                                    />
-                                </RadioButtonGroup>
-                            </div>
-
-                            <div className={stepIndex === 2 ? 'caixa' : 'disp'}>
-
-                                <Checkbox
-                                    label={respostaP3.r1p3}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP3.r2p3}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP3.r3p3}
-                                    style={styles.checkbox}
-                                />
-                                <Checkbox
-                                    label={respostaP3.r4p3}
-                                    style={styles.checkbox}
-                                />
-                                <TextField
-                                    fullWidth={true}
-                                    hintText="Outra resposta"
-                                />
-                            </div>
-                        </div>
-                        <div className={stepIndex > 2 ? 'caixa' : 'disp'}></div>
-                        <Stepper activeStep={stepIndex}>
-                            <Step>
-                                <StepLabel>{stepIndex === 0 ?  '1º Pergunta':''}</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel>{stepIndex === 1 ?  '2º Pergunta':''}</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel>{stepIndex === 2 ?  '3º Pergunta':''}</StepLabel>
-                            </Step>
-                        </Stepper>
-                        {!finished ?
-                            (
-                                <div style={{marginTop: 12}}>
-                                    <RaisedButton
-                                        label="Voltar"
-                                        disabled={stepIndex === 0}
-                                        onTouchTap={this.handlePrev}
-                                        style={{marginRight: 12}}
-                                        fullWidth={true}
-                                    />
-                                    <RaisedButton style={{marginTop: 12}}
-                                        label="Proximo"
-                                        primary={true}
-                                        onTouchTap={this.handleNext}
-                                        fullWidth={true}
-                                    />
-
-                                </div>
-                            ) : (
-                                <div className="" style={{marginTop: 12}}>
-                                    <RaisedButton
-                                        label="Voltar"
-                                        onTouchTap={this.handlePrev}
-                                        style={{marginRight: 12}}
-                                        fullWidth={true}
-                                    />
-                                    <RaisedButton style={{marginTop: 12}}
-                                        label="Enviar"
-                                        primary={true}
-                                        type="submit"
-                                        fullWidth={true}
-                                    />
-
-                                </div>
-                            )}
-
-                        </form>
-                    </div>
-
+                <div className={stepIndex===0 ? 'caixa' : 'disp' }>
+                  {tipoPergunta(perguntasQuiz[1])}                    
                 </div>
+                <div className={stepIndex===1 ? 'caixa' : 'disp' }>
+                  {tipoPergunta(perguntasQuiz[2])}                    
+                </div>
+                <div className={stepIndex===2 ? 'caixa' : 'disp' }>
+                  {tipoPergunta(perguntasQuiz[3])}                    
+                </div>
+                
+                <div className="stepps">
+                  <Stepper activeStep={stepIndex}>
+                    <Step>
+                      <StepLabel>{stepIndex === 0 ?  '1º Pergunta':''}</StepLabel>
+                    </Step>
+                    <Step>
+                      <StepLabel>{stepIndex === 1 ?  '2º Pergunta':''}</StepLabel>
+                    </Step>
+                    <Step>
+                      <StepLabel>{stepIndex === 2 ?  '3º Pergunta':''}</StepLabel>
+                    </Step>
+                  </Stepper>
+                </div>  
+                {!finished ?
+                  ( 
+                  <div style={{marginTop: 12}}>
+                    <RaisedButton
+                      label="Voltar"
+                      disabled={stepIndex === 0}
+                      onTouchTap={this.handlePrev}
+                      style={{marginRight: 12}}
+                      fullWidth={true}
+                    />
+                    <RaisedButton style={{marginTop: 12}}
+                      label="Proximo"
+                      primary={true}
+                      onTouchTap={this.handleNext}
+                      fullWidth={true}
+                      type={finished? 'submit':'button' }
+                    />
+                  
+                </div>
+                ) : (
+                  <div className="" style={{marginTop: 12}}>
+                    <RaisedButton
+                      label="Voltar"
+                      onTouchTap={this.handlePrev}
+                      style={{marginRight: 12}}
+                      fullWidth={true}
+                    />
+                    <RaisedButton style={{marginTop: 12}}
+                      label="Enviar"
+                      primary={true}
+                      type="submit"
+                      fullWidth={true}
+                    />
+                  
+                </div>
+                )}
+              </form>
             </div>
-        );
-    }
+        </div>
+      </div>
+    );
+  }
 }
+
+
+class CheckBox extends Component {
+     constructor(props) {
+	  super(props);
+	  this.state = {
+          perguntas:[]
+        };
+	}
+    render() {
+        var listPerguntas = this.props.data.map(function(perguntas) {
+            
+            return(
+                <div>
+                    <Checkbox 
+                        label={perguntas}
+                        style={styles.checkbox}
+                    />
+                </div>
+            )
+        })
+        return <div>{listPerguntas}</div> ;
+    }
+ }
+ 
+ class SimNao extends Component {
+     constructor(props) {
+	  super(props);
+	  this.state = {
+          perguntas:[]
+        };
+	}
+    render() {
+        var listPerguntas = this.props.data.map(function(perguntas) {
+            
+              return(   
+                  <RadioButton 
+                    value={perguntas}
+                    label={perguntas}
+                    style={styles.radioButton}                    
+                />
+            )
+            
+        })
+        return {listPerguntas};
+    }
+ }
+
+ 
