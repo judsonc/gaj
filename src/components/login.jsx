@@ -25,11 +25,6 @@ export default class Login extends Component {
             });
         }
     }
-    componentWillMount() {
-        if(localStorage.getItem('email')){
-            hashHistory.push("ambiente")
-        }
-    }
     componentDidMount() {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user && !user.isAnonymous) {

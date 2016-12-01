@@ -13,7 +13,7 @@ export default class Video extends Component {
 		}
 	}
 	componentDidMount() {
-		if(location.pathname=='/'){
+		if(location.pathname==='/'){
 			localStorage.setItem('proximaVisita','/quiz')
 		}
 		else{

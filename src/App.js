@@ -101,7 +101,7 @@ class App extends Component {
             // Se tiver mais que 2h, criar um novo
             } else {
                 var novoAcesso = new Acesso(acesso[acessoKey].passos)
-                var novoAcessoIdRef = refAcesso.push(novoAcesso)
+                refAcesso.push(novoAcesso)
                 var novoAcessoId = {}
                 novoAcessoId[acessoKey] = novoAcesso
                 localStorage.setItem('acesso',JSON.stringify(novoAcessoId))
@@ -121,7 +121,7 @@ class App extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
-                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/video2" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />
                     <Route path="/quiz" component={Quiz} />
                     <Route path="/login" component={Login} />
