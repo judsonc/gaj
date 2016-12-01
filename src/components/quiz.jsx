@@ -6,8 +6,19 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Toggle from 'material-ui/Toggle';
-import perguntas from './perguntas';
+// import perguntas from './perguntas';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import {refQuestionarios, fb} from './firebase.js'
+
+var chamarRef = function(ref) {
+    return ref.once('value')
+}
+
+var salvarRef = function(ref, save) {
+    ref.once('value',function(snapshot){
+        save = snapshot.val()
+    })
+}
 
 //injectTapEventPlugin();
 var Perguntas ={
@@ -15,6 +26,8 @@ var Perguntas ={
     P2: "2° Pergunta",
     P3: "3° Pergunta",
 };
+
+
 var jsonbanco = {
   "data": {
     "criacao": 1478919847072,
@@ -24,7 +37,7 @@ var jsonbanco = {
   },
   "perguntas": {
     "-KWLFdQyWg7rPthdEFTc": {
-      "conteudo": "Conteúdo da pergunta?",
+      "conteudo": "Conteúdo da pergunta1?",
       "ordem": 1,
       "respostas": [
         "opcao 0",
@@ -35,64 +48,46 @@ var jsonbanco = {
       "tipo": "radio"
     },
     "-KWLFm-IqDbthXbKvdKz": {
-      "conteudo": "Conteúdo da pergunta?",
+      "conteudo": "Conteúdo da pergunta2?",
       "ordem": 2,
       "respostas": [
         "opcao 0",
         "opcao 1",
         "opcao 2",
-        "opcao 3"
+        "opcao 33"
       ],
       "temOutraResposta": true,
       "tipo": "checkbox"
     },
     "-KWLFm-IqDbthXbK000": {
-      "conteudo": "Conteúdo da pergunta?",
+      "conteudo": "Conteúdo da pergunta3?",
       "ordem": 3,
       "respostas": [
         "opcao 0",
         "opcao 1",
         "opcao 2",
-        "opcao 3"
-      ],
-      "temOutraResposta": false,
-      "tipo": "checkbox"
-    },
-    "-KWLFm-IqDbthXbKvd33": {
-      "conteudo": "Conteúdo da pergunta?",
-      "ordem": 2,
-      "respostas": [
-        "opcao 0",
-        "opcao 1",
-        "opcao 2",
-        "opcao 3"
+        "opcao 33"
       ],
       "temOutraResposta": false,
       "tipo": "checkbox"
     }
   },
-  "titulo": "Titulo do Questionário"
+  "titulo": "Titulo do Questionário x"
 };
-var qtdPerguntas = Object.keys( jsonbanco['perguntas'] );
-console.log(qtdPerguntas.length);
-var perguntasArray = []
-for (var perguntaKey in jsonbanco['perguntas']) {
-  console.log(perguntaKey)
-  var conteudoDaPergunta = jsonbanco['perguntas'][perguntaKey]
 
-  var perguntaArray = [
-    conteudoDaPergunta.temOutraResposta,
-    conteudoDaPergunta.respostas,
-    conteudoDaPergunta.tipo,
-    conteudoDaPergunta.conteudo
-  ]
-
-  perguntasArray[conteudoDaPergunta.ordem] = perguntaArray;
-
+function tratarPerguntas(jsonbanco) {
+  var perguntasArray = []
+  for (var perguntaKey in jsonbanco['perguntas']) {
+    // console.log(perguntaKey)
+    var perguntaId = jsonbanco['perguntas'][perguntaKey]
+    perguntasArray[perguntaId.ordem] = perguntaId;
+  }
+  return perguntasArray
 }
 
 
-var perguntasQuiz = perguntasArray;
+
+// var perguntasQuiz = perguntasArray;
 /*
 var respostaPerguntas1;
 var respostaPerguntas2;
@@ -118,8 +113,8 @@ const styles = {
 };
 function tipoPergunta(Pergunta){
         
-        if(Pergunta[2]==="checkbox"){
-          var listPerguntas = Pergunta[1].map(function(perguntas) {
+        if(Pergunta.tipo==="checkbox"){
+          var listPerguntas = Pergunta.respostas.map(function(perguntas) {
               return(
                 <Checkbox 
                     label={perguntas}
@@ -130,7 +125,7 @@ function tipoPergunta(Pergunta){
           return(
             <div> 
               {listPerguntas}
-              {Pergunta[0]? 
+              {Pergunta.temOutraResposta? 
                 <TextField
                     fullWidth={true}
                     hintText="Outra resposta"
@@ -139,8 +134,8 @@ function tipoPergunta(Pergunta){
             </div>
           );
         }
-        else if(Pergunta[2] ==="radio"){
-          var listPerguntas = Pergunta[1].map(function(perguntas) {  
+        else if(Pergunta.tipo ==="radio"){
+          var listPerguntas = Pergunta.respostas.map(function(perguntas) {  
             return(   
                 <RadioButton 
                   value={perguntas}
@@ -155,7 +150,7 @@ function tipoPergunta(Pergunta){
                       {listPerguntas}
                     </RadioButtonGroup>
                   
-                  {Pergunta[0]? 
+                  {Pergunta.temOutraResposta? 
                     <TextField
                       fullWidth={true}
                       hintText="Outra resposta"
@@ -163,9 +158,9 @@ function tipoPergunta(Pergunta){
                   }
               </div>
           )
-        }else if(Pergunta[2]==="toggle"){
+        }else if(Pergunta.tipo==="toggle"){
             return(
-              <SimNao data={Perguntas[1]}/>
+              <SimNao data={Pergunta.respostas}/>
             )
         }
     }
@@ -181,17 +176,17 @@ export default class Quiz extends Component {
         super(props)
         //perguntasQuiz = this.props.route.perguntasQuiz
         this.fullScreen()
-        
+        this.state = {
+          finished: false,
+          stepIndex: 0,
+          perguntasQuiz: tratarPerguntas(jsonbanco)
+        }
     }
     fullScreen() {
 		document.getElementsByTagName("html")[0].className = "telaCheia"
 		document.getElementsByTagName("body")[0].className = "telaCheia"
 		document.getElementById("root").className = "telaCheia"    
 	}
-  state = {
-    finished: false,
-    stepIndex: 0,
-  };
 
   handleNext = () => {
     const {stepIndex} = this.state;
@@ -214,7 +209,7 @@ export default class Quiz extends Component {
   getStepContent(stepIndex) {
     if(stepIndex<3){
       return (
-        <h4>{perguntasQuiz[stepIndex][3]}</h4>
+        <h4>{this.state.perguntasQuiz[stepIndex].conteudo}</h4>
       );
     }
     return (
@@ -249,13 +244,13 @@ export default class Quiz extends Component {
                   {this.getStepContent(2)}
                 </div>
                 <div className={stepIndex===0 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(perguntasQuiz[1])}                    
+                  {tipoPergunta(this.state.perguntasQuiz[1])}                    
                 </div>
                 <div className={stepIndex===1 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(perguntasQuiz[2])}                    
+                  {tipoPergunta(this.state.perguntasQuiz[2])}                    
                 </div>
                 <div className={stepIndex===2 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(perguntasQuiz[3])}                    
+                  {tipoPergunta(this.state.perguntasQuiz[3])}                    
                 </div>
                 
                 <div className="stepps">
@@ -317,12 +312,12 @@ export default class Quiz extends Component {
 
 
 class CheckBox extends Component {
-     constructor(props) {
+    constructor(props) {
 	  super(props);
 	  this.state = {
           perguntas:[]
         };
-	}
+	  }
     render() {
         var listPerguntas = this.props.data.map(function(perguntas) {
             
@@ -361,5 +356,4 @@ class CheckBox extends Component {
         return {listPerguntas};
     }
  }
-
  

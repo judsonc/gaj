@@ -7,6 +7,7 @@ const config = {
     messagingSenderId: "977844351237"
 }
 firebase.initializeApp(config)
+export var fb = firebase
 export var database = firebase.database()
 export var refAcesso = database.ref('acessos')
 export var refQuestionarios = database.ref('questionarios')

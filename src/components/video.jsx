@@ -19,7 +19,7 @@ export default class Video extends Component {
 		else{
 			localStorage.setItem('proximaVisita','/login')
 		}
-		console.log(localStorage.getItem('proximaVisita'))
+		// console.log(localStorage.getItem('proximaVisita'))
 	}
 	onReady(event) {
 		event.target.playVideo()

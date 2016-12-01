@@ -11,19 +11,6 @@ import * as firebase from 'firebase';
 import './firebase.js'
 var providerfacebook = new firebase.auth.FacebookAuthProvider();
 var providergoogle = new firebase.auth.GoogleAuthProvider();
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-        hashHistory.push("ambiente")
-        console.log("Logado");
-        localStorage.setItem('providerId', user.providerId)
-        localStorage.setItem('uid', user.uid)
-        localStorage.setItem('displayName', user.displayName)
-        localStorage.setItem('email', user.email)
-        localStorage.setItem('photoURL', user.photoURL)
-    } else {
-        console.log("Não Logado");
-    }
-});
 
 export default class Login extends Component {
     constructor(props) {
@@ -42,6 +29,13 @@ export default class Login extends Component {
         if(localStorage.getItem('email')){
             hashHistory.push("ambiente")
         }
+    }
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user && !user.isAnonymous) {
+                hashHistory.push("ambiente")
+            }
+        })
     }
     handleChange = (event) => {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

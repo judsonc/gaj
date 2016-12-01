@@ -11,9 +11,9 @@ export function Acesso(passos) {
     this.passos = passos
     this.idUser = localStorage.getItem('uid')
 }
-export var atualizarAcesso = function(acesso) {
-    acesso.data.ultimaAlteracao = Date.now()
-    acesso.data.ultimaAlteracaoReverso = Date.now() * -1
+export var atualizarAcesso = function(acessoKey, acesso) {
+    acesso[acessoKey].data.ultimaAlteracao = Date.now()
+    acesso[acessoKey].data.ultimaAlteracaoReverso = Date.now() * -1
 }
 
 // // Para criar um novo acesso

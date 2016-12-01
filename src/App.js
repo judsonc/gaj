@@ -3,13 +3,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Router, Route, hashHistory, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {refAcesso} from './components/firebase.js'
+import {refAcesso, fb} from './components/firebase.js'
 import Login from './components/login'
 import Ambiente from './components/ambiente'
 import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
-import {Acesso} from './components/acesso.js'
+import {Acesso, atualizarAcesso} from './components/acesso.js'
 import './assets/bootstrapGridResponsive.css'
 import './assets/index.css'
 import {
@@ -35,22 +35,7 @@ const muiTheme = getMuiTheme({
         shadowColor: fullBlack,
     },
 })
-if(!localStorage.getItem('acesso')){
-    var acesso = new Acesso([false,false,false,false])
-    var acessoIdRef = refAcesso.push(acesso)
-    var acessoId = {}
-    acessoId[acessoIdRef.key] = acesso
-    localStorage.setItem('acesso',JSON.stringify(acessoId))
-}else{
-    var velhoAcesso=JSON.parse(localStorage.getItem('acesso'))
-    if(Date.now()-velhoAcesso.ultimaAlteracao>=7200000){
-        var acesso = new Acesso([false,false,false,false])
-        var acessoIdRef = refAcesso.push(acesso)
-        var acessoId = {}
-        acessoId[acessoIdRef.key] = acesso
-        localStorage.setItem('acesso',JSON.stringify(acessoId))
-    }
-}
+
 injectTapEventPlugin()
 // alert(location.pathname)
 
@@ -64,17 +49,74 @@ class Viewambiente extends Component {
 
 class App extends Component {
     componentWillMount() {
-        if(localStorage.getItem('email')){
-            hashHistory.push("ambiente")
-        }
-    }
-    componentDidMount() {
-        if(localStorage.getItem('proximaVisita')){
-            console.log(localStorage.getItem('proximaVisita'));
-            hashHistory.push(localStorage.getItem('proximaVisita'))
+        // if(localStorage.getItem('email')){
+        //     hashHistory.push("ambiente")
+        // }
+
+        // Checar a localização que o usuário estava quando saiu por último e voltar para ela
+        var proximaVisita = localStorage.getItem('proximaVisita')
+        var proximaVisitaHash = '#' + proximaVisita
+        if(proximaVisita){
+            console.log('proximaVisita:');
+            console.log(proximaVisita);
+            if (proximaVisitaHash !== location.hash) {
+                hashHistory.push(proximaVisita)
+            }
         }
 
+        fb.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                console.log("Logado")
+                if (user.isAnonymous) console.log("como anonimo.")
+                localStorage.setItem('providerId', user.providerId)
+                localStorage.setItem('uid', user.uid)
+                localStorage.setItem('displayName', user.displayName)
+                localStorage.setItem('email', user.email)
+                localStorage.setItem('photoURL', user.photoURL)
+            } else {
+                console.log("Não Logado");
+                var logarComoAnonimo = fb.auth().signInAnonymously()
+                logarComoAnonimo.catch(function(error) {
+                    console.log(error)
+                })
+                logarComoAnonimo.then(function() {
+                    console.log('Logou como anonimo')                    
+                })
+            }
+            var currentUser = fb.auth().currentUser
+            console.log("currentUser.uid:")
+            console.log(currentUser.uid)
+        })
+        // Checar se o usuário já fez algum acesso
+        var acessoString = localStorage.getItem('acesso')
+        if(acessoString) {
+            var acesso = JSON.parse(acessoString)
+            var acessoKey = Object.keys(acesso)[0]
+            // Se o acesso antigo tiver menos que duas horas, apenas atualizar
+            if ((Date.now() - acesso[acessoKey].data.ultimaAlteracao) <= 7200000) { 
+                console.log('atualizarAcesso')
+                atualizarAcesso(acessoKey, acesso)
+                refAcesso.child(acessoKey).set(acesso[acessoKey])
+                localStorage.setItem('acesso',JSON.stringify(acesso))
+            // Se tiver mais que 2h, criar um novo
+            } else {
+                var novoAcesso = new Acesso(acesso[acessoKey].passos)
+                var novoAcessoIdRef = refAcesso.push(novoAcesso)
+                var novoAcessoId = {}
+                novoAcessoId[acessoKey] = novoAcesso
+                localStorage.setItem('acesso',JSON.stringify(novoAcessoId))
+            }
+        // Criar o primeiro acesso do usuário
+        } else {
+            var primeiroAcesso = new Acesso([false,false,false,false])
+            var primeiroAcessoIdRef = refAcesso.push(primeiroAcesso)
+            var primeiroAcessoId = {}
+            primeiroAcessoId[primeiroAcessoIdRef.key] = primeiroAcesso
+            localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
+        }
     }
+    // componentDidMount() {
+    // }
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
