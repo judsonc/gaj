@@ -80,7 +80,7 @@ class App extends Component {
                     console.log(error)
                 })
                 logarComoAnonimo.then(function() {
-                    console.log('Logou como anonimo')                    
+                    console.log('Logou como anonimo')
                 })
             }
             var currentUser = fb.auth().currentUser
@@ -93,7 +93,7 @@ class App extends Component {
             var acesso = JSON.parse(acessoString)
             var acessoKey = Object.keys(acesso)[0]
             // Se o acesso antigo tiver menos que duas horas, apenas atualizar
-            if ((Date.now() - acesso[acessoKey].data.ultimaAlteracao) <= 7200000) { 
+            if ((Date.now() - acesso[acessoKey].data.ultimaAlteracao) <= 7200000) {
                 console.log('atualizarAcesso')
                 atualizarAcesso(acessoKey, acesso)
                 refAcesso.child(acessoKey).set(acesso[acessoKey])
@@ -121,7 +121,7 @@ class App extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
-                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/video2" />
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />
                     <Route path="/quiz" component={Quiz} />
                     <Route path="/login" component={Login} />

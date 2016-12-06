@@ -1,5 +1,8 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
-    if (cordova.platformId === 'android')
-        alert(cordova.platformId);
+    console.log(window.cordova);
+    console.log("jsjsj");
+    if(window.cordova) {
+        alert(window.cordova.platformId);
+    }
 }
