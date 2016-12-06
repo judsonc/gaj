@@ -6,126 +6,99 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Toggle from 'material-ui/Toggle';
-// import perguntas from './perguntas';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import {refQuestionarios, fb} from './firebase.js'
+import fb from './firebase.js'
+import RefreshIndicator from 'material-ui/RefreshIndicator'
 
-var chamarRef = function(ref) {
-    return ref.once('value')
-}
-
-var salvarRef = function(ref, save) {
-    ref.once('value',function(snapshot){
-        save = snapshot.val()
-    })
-}
-
-//injectTapEventPlugin();
 var Perguntas ={
     P1: "1° Pergunta",
-    P2: "2° Pergunta",
-    P3: "3° Pergunta",
+    P2: "2° Pergunta"
+};
+// //  var refQuestionarios = fb.ref('questionarios') ;
+// //  console.log(refQuestionarios);
+// //.var jsonbanco = {};
+var jsonbanco = {}
+var perguntasQuiz = []
+// var jsonbanco = {
+//   "data": {
+//     "criacao": 1478919847072,
+//     "criacaoReverso": -1478919847072,
+//     "ultimaAlteracao": 1478919847072,
+//     "ultimaAlteracaoReverso": -1478919847072
+//   },
+//   "perguntas": {
+//     "-KWLFdQyWg7rPthdEFTc": {
+//       "conteudo": "Conteúdo da pergunta 1?",
+//       "ordem": 1,
+//       "respostas": [
+//         "opcao 0"
+//       ],
+//       "temOutraResposta": false,
+//       "tipo": "radio"
+//     },
+//     "-KWLFm-IqDbthXbKvdKz": {
+//       "conteudo": "Conteúdo da pergunta 2?",
+//       "ordem": 2,
+//       "respostas": [
+//         "opcao 0",
+//         "opcao 1",
+//         "opcao 2",
+//         "opcao 3"
+//       ],
+//       "temOutraResposta": true,
+//       "tipo": "checkbox"
+//     },
+//     "-KWLFm-IqDbthXbKvd33": {
+//       "conteudo": "Conteúdo da pergunta?",
+//       "ordem": 2,
+//       "respostas": [
+//         "opcao 0",
+//         "opcao 1",
+//         "opcao 2",
+//         "opcao 3"
+//       ],
+//       "temOutraResposta": false,
+//       "tipo": "checkbox"
+//     }
+//   },
+//   "titulo": "Titulo do Questionário"
+// };
+
+// for (var perguntaKey in jsonbanco['perguntas']) {
+//   var conteudoDaPergunta = jsonbanco['perguntas'][perguntaKey]
+//   var perguntaArray = [
+//     conteudoDaPergunta.temOutraResposta,
+//     conteudoDaPergunta.respostas,
+//     conteudoDaPergunta.tipo,
+//     conteudoDaPergunta.conteudo
+//   ]
+//   perguntasQuiz[conteudoDaPergunta.ordem] = perguntaArray;
+// }
+
+const style = {
+  container: {
+    position: 'relative',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
 };
 
-
-var jsonbanco = {
-  "data": {
-    "criacao": 1478919847072,
-    "criacaoReverso": -1478919847072,
-    "ultimaAlteracao": 1478919847072,
-    "ultimaAlteracaoReverso": -1478919847072
-  },
-  "perguntas": {
-    "-KWLFdQyWg7rPthdEFTc": {
-      "conteudo": "Conteúdo da pergunta1?",
-      "ordem": 1,
-      "respostas": [
-        "opcao 0",
-        "opcao 1",
-        "opcao 2"
-      ],
-      "temOutraResposta": false,
-      "tipo": "radio"
-    },
-    "-KWLFm-IqDbthXbKvdKz": {
-      "conteudo": "Conteúdo da pergunta2?",
-      "ordem": 2,
-      "respostas": [
-        "opcao 0",
-        "opcao 1",
-        "opcao 2",
-        "opcao 33"
-      ],
-      "temOutraResposta": true,
-      "tipo": "checkbox"
-    },
-    "-KWLFm-IqDbthXbK000": {
-      "conteudo": "Conteúdo da pergunta3?",
-      "ordem": 3,
-      "respostas": [
-        "opcao 0",
-        "opcao 1",
-        "opcao 2",
-        "opcao 33"
-      ],
-      "temOutraResposta": false,
-      "tipo": "checkbox"
-    }
-  },
-  "titulo": "Titulo do Questionário x"
-};
-
-function tratarPerguntas(jsonbanco) {
-  var perguntasArray = []
-  for (var perguntaKey in jsonbanco['perguntas']) {
-    // console.log(perguntaKey)
-    var perguntaId = jsonbanco['perguntas'][perguntaKey]
-    perguntasArray[perguntaId.ordem] = perguntaId;
-  }
-  return perguntasArray
-}
-
-
-
-// var perguntasQuiz = perguntasArray;
-/*
-var respostaPerguntas1;
-var respostaPerguntas2;
-var respostaPerguntas3;
-*/
-
-//var perguntasQuiz=[pergunta1,pergunta2,pergunta3];
-
-const styles = {
-   block: {
-    maxWidth: 250,
-  },
-  checkbox: {
-    
-  },
-  radioButton: {
-    
-  },
-  toggle: {
-   
-  },
-
-};
 function tipoPergunta(Pergunta){
-        
-        if(Pergunta.tipo==="checkbox"){
-          var listPerguntas = Pergunta.respostas.map(function(perguntas) {
+        let listPerguntas
+        if(Pergunta[2]==="checkbox"){
+          listPerguntas = Pergunta[1].map(function(perguntas) {
               return(
                 <Checkbox 
                     label={perguntas}
-                    style={styles.checkbox}
+                    
                 />
               )
           })
           return(
             <div> 
               {listPerguntas}
-              {Pergunta.temOutraResposta? 
+              {Pergunta[0]? 
                 <TextField
                     fullWidth={true}
                     hintText="Outra resposta"
@@ -134,23 +107,23 @@ function tipoPergunta(Pergunta){
             </div>
           );
         }
-        else if(Pergunta.tipo ==="radio"){
-          var listPerguntas = Pergunta.respostas.map(function(perguntas) {  
+        else if(Pergunta[2] ==="radio"){
+          listPerguntas = Pergunta[1].map(function(perguntas) {  
             return(   
                 <RadioButton 
                   value={perguntas}
                   label={perguntas}
-                  style={styles.radioButton}                    
+                                      
               />
             )              
           })
           return(
               <div>
-                    <RadioButtonGroup>
+                    <RadioButtonGroup name="radio">
                       {listPerguntas}
                     </RadioButtonGroup>
                   
-                  {Pergunta.temOutraResposta? 
+                  {Pergunta[0]? 
                     <TextField
                       fullWidth={true}
                       hintText="Outra resposta"
@@ -158,9 +131,9 @@ function tipoPergunta(Pergunta){
                   }
               </div>
           )
-        }else if(Pergunta.tipo==="toggle"){
+        }else if(Pergunta[2]==="toggle"){
             return(
-              <SimNao data={Pergunta.respostas}/>
+              <SimNao data={Perguntas[1]}/>
             )
         }
     }
@@ -172,54 +145,91 @@ function tipoPergunta(Pergunta){
  * Linear steppers require users to complete one step in order to move on to the next.
  */
 export default class Quiz extends Component {
+  state = {
+      finished: false,
+      stepIndex: 1,
+  };
   constructor(props){
         super(props)
         //perguntasQuiz = this.props.route.perguntasQuiz
         this.fullScreen()
-        this.state = {
-          finished: false,
-          stepIndex: 0,
-          perguntasQuiz: tratarPerguntas(jsonbanco)
-        }
-    }
-    fullScreen() {
-		document.getElementsByTagName("html")[0].className = "telaCheia"
-		document.getElementsByTagName("body")[0].className = "telaCheia"
-		document.getElementById("root").className = "telaCheia"    
-	}
+        
+        var refQuestionarios = fb.ref('questionarios')    
+        this.state.refQuestionario = refQuestionarios.child('-KWLUUkfIfVl_yrLdBwU')
+        this.state.perguntasQuiz = []
+        
+               
+  }
+  fullScreen() {
+      document.getElementsByTagName("html")[0].className = "telaCheia"
+      document.getElementsByTagName("body")[0].className = "telaCheia"
+      document.getElementById("root").className = "telaCheia"    
+  }
+  
 
   handleNext = () => {
     const {stepIndex} = this.state;
     this.setState({
       stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
+      finished: stepIndex > 1,
     });
   };
 
   handlePrev = () => {
     const {stepIndex} = this.state;
     if (stepIndex > 0) {
-      this.setState({
-      stepIndex: stepIndex - 1,
-      finished: stepIndex >= 2,
-    });
+        this.setState({
+        stepIndex: stepIndex - 1,
+        finished: false,
+      });
+    };
   }
     
-  };
-  getStepContent(stepIndex) {
-    if(stepIndex<3){
-      return (
-        <h4>{this.state.perguntasQuiz[stepIndex].conteudo}</h4>
-      );
-    }
-    return (
-      <div>
-          <h4>Obrigado Por responder o quiz!!</h4>
-      </div>
-    );
+  // salvarRef = (ref, save) => {
     
+           
+  // }
+  componentDidMount = () => {
+     //var resultado = this.salvarRef(this.state.refQuestionario, this.state.questionario);
+     var self = this;
+     this.state.refQuestionario.once('value', function(snapshot){
+          jsonbanco = snapshot.val()
+          //console.log(save);
+          var perguntaArray = [];
+          //jsonbanco = save
+          var perguntasQuizLocal = []
+          for (var perguntaKey in jsonbanco['perguntas']) {
+            var conteudoDaPergunta = jsonbanco['perguntas'][perguntaKey]
+            var perguntaArray = [
+              conteudoDaPergunta.temOutraResposta,
+              conteudoDaPergunta.respostas,
+              conteudoDaPergunta.tipo,
+              conteudoDaPergunta.conteudo
+            ]
+            //console.log(perguntaArray)
+            console.log(perguntaArray)
+            perguntasQuizLocal[conteudoDaPergunta.ordem] = perguntaArray;
+          } 
+
+          //self.state.perguntasQuiz = perguntasQuizLocal
+          self.setState({
+            perguntasQuiz: perguntasQuizLocal
+          })
+
+          //return perguntasQuizLocal;
+          //console.log(JSON.stringify(save));
+      }, function (err) { console.log(err)} ) 
+
+     
+  }
+  getStepContent = (stepIndex)=>{
+    //console.log(perguntasQuiz)
+    if(stepIndex<=2)
+      return this.state.perguntasQuiz[stepIndex][3];
+    else
+       return "Obrigado Por responder o quiz!!";
   };
-  getStepInt(ordem){
+  getStepInt=(ordem)=>{
     if(ordem===this.setState.stepIndex){
         return true;
     }
@@ -231,7 +241,7 @@ export default class Quiz extends Component {
     const contentStyle = {padding: "5px"};
     return (
       <div className="telaQuiz telaCheia">
-        
+        {this.state.perguntasQuiz.length? (
         <div className="telaCheia" style={contentStyle}>
             
             <div className="">
@@ -241,28 +251,22 @@ export default class Quiz extends Component {
                   {jsonbanco.titulo}
                   </h2>
                   
-                  {this.getStepContent(2)}
-                </div>
-                <div className={stepIndex===0 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(this.state.perguntasQuiz[1])}                    
+                  <h4>{this.getStepContent(stepIndex)}</h4>
                 </div>
                 <div className={stepIndex===1 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(this.state.perguntasQuiz[2])}                    
+                  {tipoPergunta(this.state.perguntasQuiz[1])}                    
                 </div>
                 <div className={stepIndex===2 ? 'caixa' : 'disp' }>
-                  {tipoPergunta(this.state.perguntasQuiz[3])}                    
+                  {tipoPergunta(this.state.perguntasQuiz[2])}                    
                 </div>
                 
                 <div className="stepps">
                   <Stepper activeStep={stepIndex}>
                     <Step>
-                      <StepLabel>{stepIndex === 0 ?  '1º Pergunta':''}</StepLabel>
+                      <StepLabel>{stepIndex === 1 ?  '1º Pergunta':''}</StepLabel>
                     </Step>
                     <Step>
-                      <StepLabel>{stepIndex === 1 ?  '2º Pergunta':''}</StepLabel>
-                    </Step>
-                    <Step>
-                      <StepLabel>{stepIndex === 2 ?  '3º Pergunta':''}</StepLabel>
+                      <StepLabel>{stepIndex === 2 ?  '2º Pergunta':''}</StepLabel>
                     </Step>
                   </Stepper>
                 </div>  
@@ -281,7 +285,6 @@ export default class Quiz extends Component {
                       primary={true}
                       onTouchTap={this.handleNext}
                       fullWidth={true}
-                      type={finished? 'submit':'button' }
                     />
                   
                 </div>
@@ -305,35 +308,25 @@ export default class Quiz extends Component {
               </form>
             </div>
         </div>
+    ):
+    (
+      <div className="loading" >
+         <span className="texte">       
+          <RefreshIndicator
+            size={100}
+            left={10}
+            top={0}
+            status="loading"
+            style={style.refresh}
+          />
+          </span>
+      </div>
+    )
+  }
       </div>
     );
   }
-}
-
-
-class CheckBox extends Component {
-    constructor(props) {
-	  super(props);
-	  this.state = {
-          perguntas:[]
-        };
-	  }
-    render() {
-        var listPerguntas = this.props.data.map(function(perguntas) {
-            
-            return(
-                <div>
-                    <Checkbox 
-                        label={perguntas}
-                        style={styles.checkbox}
-                    />
-                </div>
-            )
-        })
-        return <div>{listPerguntas}</div> ;
-    }
- }
- 
+} 
  class SimNao extends Component {
      constructor(props) {
 	  super(props);
@@ -348,7 +341,7 @@ class CheckBox extends Component {
                   <RadioButton 
                     value={perguntas}
                     label={perguntas}
-                    style={styles.radioButton}                    
+                                       
                 />
             )
             
@@ -356,4 +349,5 @@ class CheckBox extends Component {
         return {listPerguntas};
     }
  }
+
  
