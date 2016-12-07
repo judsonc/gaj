@@ -6,7 +6,7 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Toggle from 'material-ui/Toggle';
-import fb from './firebase.js'
+import {refQuestionarios, fb} from './firebase.js'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 
 var Perguntas ={
@@ -63,6 +63,20 @@ var perguntasQuiz = []
 //   "titulo": "Titulo do Questionário"
 // };
 
+// "respostas": {
+//         "opcao 0": true,
+//         "opcao 1": true,
+//         "opcao 2": true,
+//         "opcao 3: true"
+//       }
+// "respostas": {
+//         "opcao 0": false,
+//         "opcao 1": true,
+//         "opcao 2": false,
+//         "opcao 3: false"
+//       }
+
+
 // for (var perguntaKey in jsonbanco['perguntas']) {
 //   var conteudoDaPergunta = jsonbanco['perguntas'][perguntaKey]
 //   var perguntaArray = [
@@ -83,14 +97,18 @@ const style = {
     position: 'relative',
   },
 };
-
+function _onChange(event,value){
+    console.log(value)
+}
 function tipoPergunta(Pergunta){
         let listPerguntas
         if(Pergunta[2]==="checkbox"){
-          listPerguntas = Pergunta[1].map(function(perguntas) {
+          
+          listPerguntas = Pergunta[1].map(function(resposta) {
               return(
                 <Checkbox 
-                    label={perguntas}
+                    label={resposta}
+                    id = {resposta}
                     
                 />
               )
@@ -108,18 +126,23 @@ function tipoPergunta(Pergunta){
           );
         }
         else if(Pergunta[2] ==="radio"){
-          listPerguntas = Pergunta[1].map(function(perguntas) {  
+          listPerguntas = Pergunta[1].map(function(resposta) { 
+            console.log(resposta.key) 
             return(   
                 <RadioButton 
-                  value={perguntas}
-                  label={perguntas}
+                  value={resposta}
+                  label={resposta}
+                  
                                       
               />
             )              
           })
+          //onChange={} 
           return(
               <div>
-                    <RadioButtonGroup name="radio">
+                    <RadioButtonGroup 
+                     name="shipSpeed"
+                      >
                       {listPerguntas}
                     </RadioButtonGroup>
                   
@@ -153,8 +176,6 @@ export default class Quiz extends Component {
         super(props)
         //perguntasQuiz = this.props.route.perguntasQuiz
         this.fullScreen()
-        
-        var refQuestionarios = fb.ref('questionarios')    
         this.state.refQuestionario = refQuestionarios.child('-KWLUUkfIfVl_yrLdBwU')
         this.state.perguntasQuiz = []
         
@@ -173,6 +194,7 @@ export default class Quiz extends Component {
       stepIndex: stepIndex + 1,
       finished: stepIndex > 1,
     });
+
   };
 
   handlePrev = () => {
@@ -204,7 +226,8 @@ export default class Quiz extends Component {
               conteudoDaPergunta.temOutraResposta,
               conteudoDaPergunta.respostas,
               conteudoDaPergunta.tipo,
-              conteudoDaPergunta.conteudo
+              conteudoDaPergunta.conteudo,
+              perguntaKey
             ]
             //console.log(perguntaArray)
             console.log(perguntaArray)
@@ -261,7 +284,7 @@ export default class Quiz extends Component {
                 </div>
                 
                 <div className="stepps">
-                  <Stepper activeStep={stepIndex}>
+                  <Stepper activeStep={stepIndex-1}>
                     <Step>
                       <StepLabel>{stepIndex === 1 ?  '1º Pergunta':''}</StepLabel>
                     </Step>
@@ -275,7 +298,7 @@ export default class Quiz extends Component {
                   <div style={{marginTop: 12}}>
                     <RaisedButton
                       label="Voltar"
-                      disabled={stepIndex === 0}
+                      disabled={(stepIndex -1) === 0}
                       onTouchTap={this.handlePrev}
                       style={{marginRight: 12}}
                       fullWidth={true}
