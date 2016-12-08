@@ -107,7 +107,6 @@ class App extends Component {
                 })
             }
             var currentUser = fb.auth().currentUser
-<<<<<<< HEAD
             console.log("currentUser.uid: " + currentUser.uid)
         })
         // Checar se o usuário já fez algum acesso
@@ -137,28 +136,16 @@ class App extends Component {
             primeiroAcessoId[primeiroAcessoIdRef.key] = primeiroAcesso
             localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
         }
-=======
-            console.log("currentUser.uid:")
-            console.log(currentUser.uid)
-        })        
->>>>>>> 2b580cd2f8913f72204eeb2e410c423fa5295e5c
     }
 
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
-<<<<<<< HEAD
                     <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/ambiente" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
                     <Route path="/quiz" component={Quiz} />
                     <Route path="/login" component={Login} />
-=======
-                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
-                    <Route path="/quiz" component={Quiz} linkDoProximo="/video2" />
-                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />                    
-                    <Route path="/login" component={Login} linkDoProximo="/ambiente"/>
->>>>>>> 2b580cd2f8913f72204eeb2e410c423fa5295e5c
                     <Route path="/" component={Menu}>
                         <Route path="ambiente" component={Viewambiente} />
                     </Route>
