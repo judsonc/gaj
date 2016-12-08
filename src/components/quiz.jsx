@@ -125,14 +125,17 @@ export default class Quiz extends Component {
     document.getElementsByTagName("body")[0].className = "telaCheia"
     document.getElementById("root").className = "telaCheia"    
   }
-
+  irParaProximaRota = () => {
+    hashHistory.push(this.state.proximo)
+  }
   handleNext = () => {
     let self = this
     var nextStep = function(){
       self.setState({
         stepIndex: self.state.stepIndex + 1,
-        finished: self.state.stepIndex > 1,
+        finished: self.state.stepIndex > 0,
       })
+      
     }
     const {stepIndex} = this.state
     //O indice de array de perguntas começa no 0, stepIndex começa em 1.
@@ -158,6 +161,9 @@ export default class Quiz extends Component {
         // salvarRespostaNoFirebase.catch(function(err) {console.log('Erro ao salvar resposta no firebase')})
       }
     }
+    if(this.state.finished){
+        hashHistory.push(this.state.proximo)
+    }
   }
 
   handlePrev = () => {
@@ -170,9 +176,7 @@ export default class Quiz extends Component {
     };
   }
 
-  irParaProximaRota = () => {
-    hashHistory.push(this.state.proximo)
-  }
+  
     
   componentDidMount = () => {
      //var resultado = this.salvarRef(this.state.refQuestionario, this.state.questionario);
@@ -244,42 +248,29 @@ export default class Quiz extends Component {
                   </Stepper>
                 </div>  
 
-                {!finished ?
-                  ( 
+                
                   <div style={{marginTop: 12}}>
-                    <RaisedButton
-                      label="Voltar"
-                      disabled={(stepIndex -1) === 0}
-                      onTouchTap={this.handlePrev}
-                      style={{marginRight: 12}}
-                      fullWidth={true}
-                    />
+                    {(stepIndex -1)?(
+                      <RaisedButton
+                        label="Voltar"
+                        disabled={(stepIndex -1) === 0}
+                        onTouchTap={this.handlePrev}
+                        style={{marginRight: 12}}
+                        fullWidth={true}
+                      />):""
+                      
+                    }
+                    
                     <RaisedButton style={{marginTop: 12}}
-                      label="Proximo"
+                      label="Avançar"
                       primary={true}
                       onTouchTap={this.handleNext}
                       fullWidth={true}
+                      type={finished?"submit":"button"} 
                     />
                   
                 </div>
-                ) : (
-                  <div className="" style={{marginTop: 12}}>
-                    <RaisedButton
-                      label="Voltar"
-                      onTouchTap={this.handlePrev}
-                      style={{marginRight: 12}}
-                      fullWidth={true}
-                    />
-                    <RaisedButton style={{marginTop: 12}}
-                      label="Enviar"
-                      onTouchTap={this.irParaProximaRota}
-                      primary={true}
-                      type="submit"
-                      fullWidth={true}
-                    />
-                  
-                </div>
-                )}
+                
               </form>
             </div>
         </div>
