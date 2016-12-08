@@ -3,13 +3,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Router, Route, hashHistory, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {refAcesso, fb} from './components/firebase.js'
+import {refAcesso, fb} from './components/firebase'
 import Login from './components/login'
 import Ambiente from './components/ambiente'
 import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
-import {Acesso, atualizarAcesso} from './components/acesso.js'
+import {Acesso, atualizarAcesso} from './components/acesso'
 import './assets/bootstrapGridResponsive.css'
 import './assets/index.css'
 import {
@@ -37,7 +37,6 @@ const muiTheme = getMuiTheme({
 })
 
 injectTapEventPlugin()
-// alert(location.pathname)
 
 class Viewambiente extends Component {
     render() {
@@ -49,16 +48,11 @@ class Viewambiente extends Component {
 
 class App extends Component {
     componentWillMount() {
-        // if(localStorage.getItem('email')){
-        //     hashHistory.push("ambiente")
-        // }
-
         // Checar a localização que o usuário estava quando saiu por último e voltar para ela
         var proximaVisita = localStorage.getItem('proximaVisita')
         var proximaVisitaHash = '#' + proximaVisita
         if(proximaVisita){
-            console.log('proximaVisita:');
-            console.log(proximaVisita);
+            console.log('proximaVisita: ' + proximaVisita);
             if (proximaVisitaHash !== location.hash) {
                 hashHistory.push(proximaVisita)
             }
@@ -84,8 +78,7 @@ class App extends Component {
                 })
             }
             var currentUser = fb.auth().currentUser
-            console.log("currentUser.uid:")
-            console.log(currentUser.uid)
+            console.log("currentUser.uid: " + currentUser.uid)
         })
         // Checar se o usuário já fez algum acesso
         var acessoString = localStorage.getItem('acesso')
@@ -115,14 +108,13 @@ class App extends Component {
             localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
         }
     }
-    // componentDidMount() {
-    // }
+
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
-                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
-                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/ambiente" />
+                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
                     <Route path="/quiz" component={Quiz} />
                     <Route path="/login" component={Login} />
                     <Route path="/" component={Menu}>

@@ -2,12 +2,12 @@ import React from 'react'
 import {hashHistory} from 'react-router'
 import ThankYouImage from '../assets/thankYou.svg'
 import * as firebase from 'firebase';
-import './firebase.js'
+import './firebase'
 class Ambiente extends React.Component {
 	componentDidMount() {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user.isAnonymous || !user) {
-                hashHistory.push("login")
+                hashHistory.push('login')
             }
         })
 		localStorage.setItem('proximaVisita','/ambiente')
