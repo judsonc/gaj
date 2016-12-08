@@ -13,11 +13,11 @@ export default class Video extends Component {
 		}
 	}
 	componentDidMount() {
-		if(location.pathname==='/'){
-			localStorage.setItem('proximaVisita','/quiz')
+		if(location.hash==='#/'){
+			localStorage.setItem('proximaVisita','/')
 		}
-		else{
-			localStorage.setItem('proximaVisita','/login')
+		else if(location.hash==='#/video2') {
+			localStorage.setItem('proximaVisita','/video2')
 		}
 		// console.log(localStorage.getItem('proximaVisita'))
 	}

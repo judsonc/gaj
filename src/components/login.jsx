@@ -15,7 +15,13 @@ var providergoogle = new firebase.auth.GoogleAuthProvider();
 export default class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {email:'',error: false,erroemail:'',user: localStorage.getItem('user')};
+        this.state = {
+            email:'',
+            error: false,
+            erroemail:'',
+            user: localStorage.getItem('user'),
+            proximo: props.route.linkDoProximo
+        };
     }
     handleSubmitEmail = () =>{
         if(this.state.erroemail){
@@ -26,9 +32,11 @@ export default class Login extends Component {
         }
     }
     componentDidMount() {
+        var self = this
+        localStorage.setItem('proximaVisita','/login')
         firebase.auth().onAuthStateChanged(function (user) {
             if (user && !user.isAnonymous) {
-                hashHistory.push("ambiente")
+                hashHistory.push(self.state.proximo)
             }
         })
     }

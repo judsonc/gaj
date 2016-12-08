@@ -5,14 +5,14 @@ function Data() {
     this.ultimaAlteracaoReverso = Date.now() * -1
 }
 
-function Acesso(passos) {
+export function Acesso(passos) {
     this.data = new Data()
     // array de tamanho 6
     this.passos = passos
     this.idUser = localStorage.getItem('uid')
 }
 
-function Questionario(perguntas, titulo) {
+export function Questionario(perguntas, titulo) {
     this.data = new Data()
     // array
     this.perguntas = perguntas
@@ -21,7 +21,7 @@ function Questionario(perguntas, titulo) {
 }
 
 
-function Pergunta(temOutraResposta, conteudo, respostas = {}) {
+export function Pergunta(temOutraResposta, conteudo, respostas = {}) {
     // bool
     this.temOutraResposta = temOutraResposta
     // string
@@ -36,7 +36,7 @@ function Pergunta(temOutraResposta, conteudo, respostas = {}) {
     this.respostas = respostas
 }
 
-function Restaurante(nomeFantasia, razaoSocial, cnpj, endereco, contatos) {
+export function Restaurante(nomeFantasia, razaoSocial, cnpj, endereco, contatos) {
     // string
     this.data = new Data()
     this.nomeFantasia = nomeFantasia
@@ -47,7 +47,7 @@ function Restaurante(nomeFantasia, razaoSocial, cnpj, endereco, contatos) {
     this.contatos = contatos
 }
 
-function Endereco(cep, tipo, logradouro, numero, bairro, cidade, estado, complemento) {
+export function Endereco(cep, tipo, logradouro, numero, bairro, cidade, estado, complemento) {
     this.cep = cep
     this.tipo = tipo
     this.logradouro = logradouro
@@ -58,9 +58,17 @@ function Endereco(cep, tipo, logradouro, numero, bairro, cidade, estado, complem
     this.complemento = complemento
 }
 
-function Contato(nome, email, telefone, cargo) {
+export function Contato(nome, email, telefone, cargo) {
     this.nome = nome
     this.email = email
     this.telefone = telefone
     this.cargo = cargo
+}
+
+export function Resposta(conteudo, idPergunta, idQuestionario) {
+    this.data = new Data()
+    this.conteudo = conteudo
+    this.idPergunta = idPergunta
+    this.idQuestionario = idQuestionario
+    this.idUser = localStorage.getItem('uid')
 }

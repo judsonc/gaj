@@ -57,7 +57,35 @@ class App extends Component {
                 hashHistory.push(proximaVisita)
             }
         }
-
+        function registrarAcesso() {
+            // Checar se o usuário já fez algum acesso
+            var acessoString = localStorage.getItem('acesso')
+            if(acessoString) {
+                var acesso = JSON.parse(acessoString)
+                var acessoKey = Object.keys(acesso)[0]
+                // Se o acesso antigo tiver menos que duas horas, apenas atualizar
+                if ((Date.now() - acesso[acessoKey].data.ultimaAlteracao) <= 7200000) {
+                    console.log('atualizarAcesso')
+                    atualizarAcesso(acessoKey, acesso)
+                    refAcesso.child(acessoKey).set(acesso[acessoKey])
+                    localStorage.setItem('acesso',JSON.stringify(acesso))
+                // Se tiver mais que 2h, criar um novo
+                } else {
+                    var novoAcesso = new Acesso(acesso[acessoKey].passos)
+                    refAcesso.push(novoAcesso)
+                    var novoAcessoId = {}
+                    novoAcessoId[acessoKey] = novoAcesso
+                    localStorage.setItem('acesso',JSON.stringify(novoAcessoId))
+                }
+            // Criar o primeiro acesso do usuário
+            } else {
+                var primeiroAcesso = new Acesso([false,false,false,false])
+                var primeiroAcessoIdRef = refAcesso.push(primeiroAcesso)
+                var primeiroAcessoId = {}
+                primeiroAcessoId[primeiroAcessoIdRef.key] = primeiroAcesso
+                localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
+            }
+        }
         fb.auth().onAuthStateChanged(function (user) {
             if (user) {
                 console.log("Logado")
@@ -67,6 +95,7 @@ class App extends Component {
                 localStorage.setItem('displayName', user.displayName)
                 localStorage.setItem('email', user.email)
                 localStorage.setItem('photoURL', user.photoURL)
+                registrarAcesso()
             } else {
                 console.log("Não Logado");
                 var logarComoAnonimo = fb.auth().signInAnonymously()
@@ -78,6 +107,7 @@ class App extends Component {
                 })
             }
             var currentUser = fb.auth().currentUser
+<<<<<<< HEAD
             console.log("currentUser.uid: " + currentUser.uid)
         })
         // Checar se o usuário já fez algum acesso
@@ -107,16 +137,28 @@ class App extends Component {
             primeiroAcessoId[primeiroAcessoIdRef.key] = primeiroAcesso
             localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
         }
+=======
+            console.log("currentUser.uid:")
+            console.log(currentUser.uid)
+        })        
+>>>>>>> 2b580cd2f8913f72204eeb2e410c423fa5295e5c
     }
 
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
+<<<<<<< HEAD
                     <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/ambiente" />
                     <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
                     <Route path="/quiz" component={Quiz} />
                     <Route path="/login" component={Login} />
+=======
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
+                    <Route path="/quiz" component={Quiz} linkDoProximo="/video2" />
+                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />                    
+                    <Route path="/login" component={Login} linkDoProximo="/ambiente"/>
+>>>>>>> 2b580cd2f8913f72204eeb2e410c423fa5295e5c
                     <Route path="/" component={Menu}>
                         <Route path="ambiente" component={Viewambiente} />
                     </Route>

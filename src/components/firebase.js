@@ -12,5 +12,6 @@ export var database = firebase.database()
 export var refAcesso = database.ref('acessos')
 export var refQuestionarios = database.ref('questionarios')
 export var refPerguntas = database.ref('perguntas')
+export var refRespostas = database.ref('respostas')
 export var refRestaurantes = database.ref('restaurantes')
 

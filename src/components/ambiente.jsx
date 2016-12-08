@@ -5,12 +5,12 @@ import * as firebase from 'firebase';
 import './firebase'
 class Ambiente extends React.Component {
 	componentDidMount() {
+		localStorage.setItem('proximaVisita','/ambiente')
         firebase.auth().onAuthStateChanged(function (user) {
             if (user.isAnonymous || !user) {
                 hashHistory.push('login')
             }
-        })
-		localStorage.setItem('proximaVisita','/ambiente')
+        })		
 		// for (var id in acesso) {
 			// console.log("id:"+id)
 			// var updates = {}
