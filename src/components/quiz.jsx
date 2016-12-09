@@ -6,9 +6,8 @@ import '../assets/styleQuiz.css'
 import Checkbox from 'material-ui/Checkbox'
 import TextField from 'material-ui/TextField'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
-// import Toggle from 'material-ui/Toggle';
-import {refRespostas, refQuestionarios} from './firebase.js'
-import {Resposta} from './construtores.js'
+import {refRespostas, refQuestionarios} from './firebase'
+import {Resposta} from './construtores'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 
 var objetoQuestionario = {}
@@ -195,8 +194,7 @@ class Quiz extends Component {
             <div className="telaQuiz telaCheia">
                 {this.state.arrayPerguntas.length? (
                     <div className="telaCheia" style={contentStyle}>
-                        <form action="ambiente" className="telaCheia" method="get">
-
+                        <form className="telaCheia">
                             <div className="alinhamento">
                                 <h2>
                                     {objetoQuestionario.titulo}
@@ -209,7 +207,6 @@ class Quiz extends Component {
                             <div className={stepIndex===2 ? 'caixa' : 'disp' }>
                                 {renderPergunta(this.state.arrayPerguntas[1])}
                             </div>
-
                             <div className="stepps">
                                 <Stepper activeStep={stepIndex-1}>
                                     <Step>
@@ -220,8 +217,6 @@ class Quiz extends Component {
                                     </Step>
                                 </Stepper>
                             </div>
-
-
                             <div style={{marginTop: 12}}>
                                 {(stepIndex -1)?(
                                     <RaisedButton
@@ -231,9 +226,7 @@ class Quiz extends Component {
                                         style={{marginRight: 12}}
                                         fullWidth={true}
                                     />):""
-
                                 }
-
                                 <RaisedButton style={{marginTop: 12}}
                                     label="Avançar"
                                     primary={true}
@@ -241,9 +234,7 @@ class Quiz extends Component {
                                     fullWidth={true}
                                     type={finished?"submit":"button"}
                                 />
-
                             </div>
-
                         </form>
                     </div>
                 ):

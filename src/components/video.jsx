@@ -8,7 +8,6 @@ export default class Video extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			videoId: props.route.videoId,
 			proximo: props.route.linkDoProximo,
 		}
 	}
@@ -28,11 +27,9 @@ export default class Video extends Component {
 		event.target.playVideo()
 		// event.target.setVolume(50)
 	}
-
 	onEnd() {
 		this.context.router.push(this.state.proximo)
 	}
-
 	render() {
 		const styleBotaoFlutuante = {
 			bottom: 40,
@@ -63,7 +60,7 @@ export default class Video extends Component {
 
 		return (
 			<span style={styleVideo}>
-				<YouTube videoId={this.state.videoId}
+				<YouTube videoId={this.props.route.videoId}
 					opts={opts}
 					onReady={this.onReady}
 					onEnd={this.onEnd.bind(this)}
