@@ -13,7 +13,7 @@ export default class Video extends Component {
 		}
 	}
 	componentDidMount() {
-		if(localStorage.getItem('proximaVisita')==='#/ambiente') {
+		if(localStorage.getItem('proximaVisita')==='/ambiente') {
 			this.setState({proximo: '/ambiente' })
 		} else {
 			if(location.hash==='#/'){
