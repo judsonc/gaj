@@ -1,19 +1,36 @@
 .disp{
   display: none;
 }
-div .caixa{
-  min-height: 300px;
+/*div .caixa{
+  min-height: 250px;
   margin-bottom: calc(100% - 420px);
   margin-left: 15px;
   padding: 0;
 
+}*/
+@media screen and (max-width: 700px){
+  div .caixa{
+    min-height: 250px;
+    margin-bottom: calc(100% - 420px);
+    margin-left: 15px;
+    padding: 0;
+
+  }
+}
+@media screen and (min-width: 701px){
+  div .caixa{
+    margin-bottom: calc(100% - 420px);
+    margin-left: 15px;
+    padding: 0;
+
+  }
 }
 .caixa div{
   margin: 0;
 }
-div label{
-  text-align: center;
-}
+/*div label{
+  text-align: left;
+}*/
 .alinhamento{
   text-align: center;
 }
@@ -33,4 +50,8 @@ div label{
 }
 body .telaCheia{
     height: calc(100% - 35px);
+}
+.loading{
+  text-align: center;
+  margin-top: 50%;
 }
