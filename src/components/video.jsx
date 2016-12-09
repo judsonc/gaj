@@ -13,13 +13,16 @@ export default class Video extends Component {
 		}
 	}
 	componentDidMount() {
-		if(location.hash==='#/'){
-			localStorage.setItem('proximaVisita','/')
+		if(localStorage.getItem('proximaVisita')==='#/ambiente') {
+			this.setState({proximo: '/ambiente' })
+		} else {
+			if(location.hash==='#/'){
+				localStorage.setItem('proximaVisita','/')
+			}
+			else if(location.hash==='#/video2') {
+				localStorage.setItem('proximaVisita','/video2')
+			}
 		}
-		else if(location.hash==='#/video2') {
-			localStorage.setItem('proximaVisita','/video2')
-		}
-		// console.log(localStorage.getItem('proximaVisita'))
 	}
 	onReady(event) {
 		event.target.playVideo()

@@ -3,13 +3,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Router, Route, hashHistory, Redirect} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {refAcesso, fb} from './components/firebase'
+import {refAcesso, fb} from './components/firebase.js'
 import Login from './components/login'
 import Ambiente from './components/ambiente'
 import Menu from './components/menu'
 import Video from './components/video'
 import Quiz from './components/quiz'
-import {Acesso, atualizarAcesso} from './components/acesso'
+import {Acesso, atualizarAcesso} from './components/acesso.js'
 import './assets/bootstrapGridResponsive.css'
 import './assets/index.css'
 import {
@@ -52,7 +52,7 @@ class App extends Component {
         var proximaVisita = localStorage.getItem('proximaVisita')
         var proximaVisitaHash = '#' + proximaVisita
         if(proximaVisita){
-            console.log('proximaVisita: ' + proximaVisita);
+            console.log('proximaVisita:' + proximaVisita);
             if (proximaVisitaHash !== location.hash) {
                 hashHistory.push(proximaVisita)
             }
@@ -107,45 +107,18 @@ class App extends Component {
                 })
             }
             var currentUser = fb.auth().currentUser
-            console.log("currentUser.uid: " + currentUser.uid)
+            console.log("currentUser.uid:" + currentUser.uid)
         })
-        // Checar se o usuário já fez algum acesso
-        var acessoString = localStorage.getItem('acesso')
-        if(acessoString) {
-            var acesso = JSON.parse(acessoString)
-            var acessoKey = Object.keys(acesso)[0]
-            // Se o acesso antigo tiver menos que duas horas, apenas atualizar
-            if ((Date.now() - acesso[acessoKey].data.ultimaAlteracao) <= 7200000) {
-                console.log('atualizarAcesso')
-                atualizarAcesso(acessoKey, acesso)
-                refAcesso.child(acessoKey).set(acesso[acessoKey])
-                localStorage.setItem('acesso',JSON.stringify(acesso))
-            // Se tiver mais que 2h, criar um novo
-            } else {
-                var novoAcesso = new Acesso(acesso[acessoKey].passos)
-                refAcesso.push(novoAcesso)
-                var novoAcessoId = {}
-                novoAcessoId[acessoKey] = novoAcesso
-                localStorage.setItem('acesso',JSON.stringify(novoAcessoId))
-            }
-        // Criar o primeiro acesso do usuário
-        } else {
-            var primeiroAcesso = new Acesso([false,false,false,false])
-            var primeiroAcessoIdRef = refAcesso.push(primeiroAcesso)
-            var primeiroAcessoId = {}
-            primeiroAcessoId[primeiroAcessoIdRef.key] = primeiroAcesso
-            localStorage.setItem('acesso',JSON.stringify(primeiroAcessoId))
-        }
     }
 
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Router history={hashHistory}>
-                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/ambiente" />
-                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/ambiente" />
-                    <Route path="/quiz" component={Quiz} />
-                    <Route path="/login" component={Login} />
+                    <Route path="/" component={Video} videoId="Xj4_Mjx_9-A" linkDoProximo="/quiz" />
+                    <Route path="/quiz" component={Quiz} linkDoProximo="/video2" />
+                    <Route path="/video2" component={Video} videoId="OLZJ-E2CWuw" linkDoProximo="/login" />
+                    <Route path="/login" component={Login} linkDoProximo="/ambiente"/>
                     <Route path="/" component={Menu}>
                         <Route path="ambiente" component={Viewambiente} />
                     </Route>
