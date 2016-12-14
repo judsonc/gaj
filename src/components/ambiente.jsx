@@ -6,15 +6,15 @@ class Ambiente extends React.Component {
 		localStorage.setItem('proximaVisita','/ambiente')
 	}
 
-    render() {
-        return (
-        	<div className="container">
-            	<div className="row">
-        	   		<div className="col-xs-12 smallImage" style={{backgroundImage: "url(." + ThankYouImage + ")"}}/>
-        		</div>
-        	</div>
-        );
-    }
+	render() {
+		return (
+			<div className="container">
+				<div className="row">
+					<div className="col-xs-12 smallImage" style={{backgroundImage: "url(." + ThankYouImage + ")"}}/>
+				</div>
+			</div>
+		);
+	}
 }
 
 export default Ambiente;
