@@ -2,19 +2,19 @@ import React from 'react'
 import ThankYouImage from '../assets/thankYou.svg'
 
 class Ambiente extends React.Component {
-	componentDidMount() {
-		localStorage.setItem('proximaVisita','/ambiente')
-	}
+  componentDidMount () {
+    localStorage.setItem('proximaVisita','/ambiente')
+  }
 
-	render() {
-		return (
-			<div className="container">
-				<div className="row">
-					<div className="col-xs-12 smallImage" style={{backgroundImage: "url(." + ThankYouImage + ")"}}/>
-				</div>
-			</div>
-		);
-	}
+  render () {
+    return (
+      <div className='container'>
+        <div className='row'>
+          <div className='col-xs-12 smallImage' style={{backgroundImage: 'url(.' + ThankYouImage + ')'}} />
+        </div>
+      </div>
+    )
+  }
 }
 
-export default Ambiente;
+export default Ambiente

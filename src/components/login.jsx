@@ -1,21 +1,22 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {hashHistory} from 'react-router'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
+import {atualizarPasso} from './acesso'
 
 export default class Login extends Component {
-  constructor() {
+  constructor () {
     super()
     this.state = {
-      showLogin: false,
+      showLogin: false
     }
   }
 
-  popupLogin() {
+  popupLogin () {
     let self = this
     const url = 'https://garcomajato-d9f5d.firebaseapp.com/'
     if (window.cordova) {
-      let ref = window.open(url, '_blank', 'location=no,zoom=no,toolbar=no,hidden=yes');
-      ref.addEventListener('loadstart', function(event) {
+      let ref = window.open(url, '_blank', 'location=no,zoom=no,toolbar=no,hidden=yes')
+      ref.addEventListener('loadstart', function (event) {
         if (event.url !== url && event.url.indexOf('gaj_user_token=') > 0) {
           let id = event.url.split('gaj_user_token=')
           localStorage.setItem('gaj_user_token',id[1])
@@ -23,36 +24,37 @@ export default class Login extends Component {
           hashHistory.push('ambiente')
         }
       })
-      ref.addEventListener('loadstop', function(event) {
+      ref.addEventListener('loadstop', function (event) {
         self.setState({ showLogin: true })
         ref.show()
       })
-      ref.addEventListener('exit', function(event) {
+      ref.addEventListener('exit', function (event) {
         if (!localStorage.getItem('gaj_user_token')) {
           self.setState({ showLogin: false })
           self.popupLogin()
         }
       })
     } else {
-      alert("Você não está usando um celular")
+      alert('Você não está usando um celular')
     }
   }
 
-  componentDidMount() {
-    localStorage.setItem('proximaVisita','/login')
+  componentDidMount () {
+    localStorage.setItem('proximaVisita', '/login')
+    atualizarPasso(4)
     this.popupLogin()
   }
 
-  render() {
+  render () {
     const style = {
       container: {
-        position: 'relative',
+        position: 'relative'
       },
       refresh: {
         position: 'relative',
         marginLeft: 'auto',
-        marginRight: 'auto',
-      },
+        marginRight: 'auto'
+      }
     }
 
     return (this.state.showLogin) ? null : (

@@ -7,6 +7,7 @@ import Checkbox from 'material-ui/Checkbox'
 import TextField from 'material-ui/TextField'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 // import Toggle from 'material-ui/Toggle';
+import {atualizarPasso} from './acesso'
 import {refRespostas, refQuestionarios} from './firebase.js'
 import {Resposta} from './construtores.js'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
@@ -36,12 +37,12 @@ function renderPergunta(objetoPergunta){
     }
     let respostas
     if(objetoPergunta.tipo==="checkbox"){      
-      respostas = objetoPergunta.respostas.map(function(resposta) {
+      respostas = objetoPergunta.respostas.map(function(resposta, indice) {
           return(
             <Checkbox 
                 label={resposta}
                 id={resposta} 
-                
+                key={indice}
             />
           )
       })
@@ -63,6 +64,7 @@ function renderPergunta(objetoPergunta){
               <RadioButton 
                 value={indice}
                 label={resposta}
+                key={indice}
               />
         )              
       })
@@ -107,39 +109,29 @@ function renderPergunta(objetoPergunta){
  * Linear steppers require users to complete one step in order to move on to the next.
  */
 export default class Quiz extends Component {
-  state = {
-    finished: false,
-    stepIndex: 1,
-  }
-  constructor(props){
+  constructor (props) {
       super(props)
-      //perguntasQuiz = this.props.route.perguntasQuiz
       this.fullScreen()
-      // this.state = {
-      //   proximo: props.route.linkDoProximo,
-      //   refQuestionario: refQuestionarios.child('-KWLUUkfIfVl_yrLdBwU'),
-      //   arrayPerguntas: []
-      // }
-      this.state.proximo = props.route.linkDoProximo
-      this.state.refQuestionario = refQuestionarios.child('-KWLUUkfIfVl_yrLdBwU')
-      this.state.arrayPerguntas = []
+      this.state = {
+        finished: false,
+        stepIndex: 1,
+        proximo: props.route.linkDoProximo,
+        refQuestionario: refQuestionarios.child('-KWLUUkfIfVl_yrLdBwU'),
+        arrayPerguntas: []
+      }
   }
   fullScreen() {
     document.getElementsByTagName("html")[0].className = "telaCheia"
     document.getElementsByTagName("body")[0].className = "telaCheia"
     document.getElementById("root").className = "telaCheia"    
   }
-  irParaProximaRota = () => {
-    hashHistory.push(this.state.proximo)
-  }
   handleNext = () => {
-    let self = this
-    var nextStep = function(){
+    const self = this
+    const nextStep = function() {
       self.setState({
         stepIndex: self.state.stepIndex + 1,
         finished: self.state.stepIndex > 0,
       })
-      
     }
     const {stepIndex} = this.state
     //O indice de array de perguntas começa no 0, stepIndex começa em 1.
@@ -183,9 +175,9 @@ export default class Quiz extends Component {
   
     
   componentDidMount = () => {
-     //var resultado = this.salvarRef(this.state.refQuestionario, this.state.questionario);
      localStorage.setItem('proximaVisita','/quiz')
-     var self = this;
+     atualizarPasso(1)
+     var self = this
      this.state.refQuestionario.once('value', function(snapshot){
         objetoQuestionario = snapshot.val()
         let arrayPerguntas = []
@@ -196,8 +188,7 @@ export default class Quiz extends Component {
             objetoPergunta['key'] = perguntaKey
             objetoPergunta['resposta'] = null
             arrayPerguntas[objetoPergunta.ordem] = objetoPergunta
-          }
-          
+          }          
         }
         self.setState({
           arrayPerguntas: arrayPerguntas
@@ -305,11 +296,11 @@ export default class Quiz extends Component {
         }
 	}
     render() {
-        var listPerguntas = this.props.data.map(function(perguntas) {            
+        var listPerguntas = this.props.data.map(function(perguntas, indice) {            
             return(   
                 <RadioButton 
                   value={perguntas}
-                  label={perguntas}                                       
+                  label={perguntas}                                key={indice}
               />
             )            
         })

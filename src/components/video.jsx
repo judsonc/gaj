@@ -2,50 +2,52 @@ import React, {Component} from 'react'
 import {Link} from 'react-router'
 import YouTube from 'react-youtube'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ContentAdd from 'material-ui/svg-icons/content/forward' //send
+import ContentAdd from 'material-ui/svg-icons/content/forward'
+import {atualizarPasso} from './acesso'
 
 export default class Video extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
-      proximo: props.route.linkDoProximo,
+      proximo: props.route.linkDoProximo
     }
   }
 
-  componentDidMount() {
-    if(localStorage.getItem('proximaVisita')==='/ambiente') {
-      this.setState({proximo: '/ambiente' })
+  componentWillMount () {
+    if (localStorage.getItem('proximaVisita') === '/ambiente') {
+      this.setState({ proximo: '/ambiente' })
     } else {
-      if(location.hash==='#/'){
-        localStorage.setItem('proximaVisita','/')
-      }
-      else if(location.hash==='#/video2') {
-        localStorage.setItem('proximaVisita','/video2')
+      if (location.hash === '#/') {
+        localStorage.setItem('proximaVisita', '/')
+        atualizarPasso(0)
+      } else if (location.hash === '#/video2') {
+        localStorage.setItem('proximaVisita', '/video2')
+        atualizarPasso(2)
       }
     }
   }
 
-  onReady(event) {
+  onReady (event) {
     event.target.playVideo()
     // event.target.setVolume(50)
   }
 
-  onEnd() {
+  onEnd () {
     this.context.router.push(this.state.proximo)
   }
 
-  render() {
+  render () {
     const styleBotaoFlutuante = {
       bottom: 40,
       right: 20,
       zIndex: 2,
-      position: 'fixed',
+      position: 'fixed'
     }
 
     const styleVideo = {
       position: 'fixed',
       width: '100%',
-      height: '100%',
+      height: '100%'
     }
 
     const opts = {
@@ -58,7 +60,7 @@ export default class Video extends Component {
         showinfo: 0, // remove titulo
         rel: 0, // remove videos relacionados no fim do video
         iv_load_policy: 3, // remove anotações
-        fs: 0, // remove fullscren
+        fs: 0 // remove fullscren
       }
     }
 
